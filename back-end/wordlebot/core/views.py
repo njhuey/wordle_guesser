@@ -9,6 +9,11 @@ class GuessWord(APIView):
         """
         Returns the guess sequence for a given target word.
         """
+        try:
+            request.query_params['word']
+        except:
+            raise APIException('must include word query param')
+
         guesses = wordle(request.query_params['word'])
         if not guesses:
             raise APIException('invalid input')
