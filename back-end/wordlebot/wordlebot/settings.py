@@ -1,3 +1,5 @@
+import os
+
 """
 Django settings for wordlebot project.
 
@@ -20,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-oh6l9b^lq0l^m2q8ch%)=6s23p2=_g6rwl_s0by4-#@un7lb0i'
+SECRET_KEY = "django-insecure-oh6l9b^lq0l^m2q8ch%)=6s23p2=_g6rwl_s0by4-#@un7lb0i"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
