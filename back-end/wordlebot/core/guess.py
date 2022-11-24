@@ -1,11 +1,17 @@
 import ast
 
 with open('core/wordleWords.txt') as f:
+    """
+    loads words into array
+    """
     lines = f.readlines()
 word_list = [ast.literal_eval(line) for line in lines][0]
 
 
 def wordle(target_word):
+    """
+    driver function for wordle script
+    """
     if len(target_word) != 5 or target_word not in word_list:
         return []
 
@@ -20,6 +26,9 @@ def wordle(target_word):
 
 
 def eval(words):
+    """
+    evaluates and returns best words for next guess
+    """
     pos_frequency = [{}, {}, {}, {}, {}]
     for word in words:
         for index, letter in enumerate(word):
@@ -40,6 +49,9 @@ def eval(words):
 
 
 def check(target_word, guess):
+    """
+    returns colored response by comparing guess and target word
+    """
     response = []
     for index in range(5):
         if guess[index] == target_word[index]:
@@ -53,6 +65,9 @@ def check(target_word, guess):
 
 
 def eleminate_words(words, guess, response):
+    """
+    eliminates words that are no longer possible
+    """
     for index, color in enumerate(response):
         if color == "green":
             greenLetter(words, guess, index)
