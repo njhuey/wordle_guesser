@@ -18,11 +18,11 @@ export function GenerateWordle(props: any) {
 export function GenerateWord(props: any) {
   const word = [];
   for (let i = 0; i < 5; i++) {
-    if (props.word[i] == props.target[i]) {
+    if (props.word[i] == props.target[i].toLowerCase()) {
       word.push(
         <GenerateLetter letter={props.word[i]} color="#538d4e" key={i} />
       );
-    } else if (props.target.includes(props.word[i])) {
+    } else if (props.target.toLowerCase().includes(props.word[i])) {
       word.push(
         <GenerateLetter letter={props.word[i]} color="#b59f3b" key={i} />
       );
