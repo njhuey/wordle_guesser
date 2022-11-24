@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faLinkedin,
-  faTwitter,
-  faGithub,
-} from "@fortawesome/free-brands-svg-icons";
-
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
   Heading,
   Flex,
