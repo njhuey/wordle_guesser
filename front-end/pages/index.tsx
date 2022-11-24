@@ -24,7 +24,6 @@ export default function Home() {
   const [validWord, setValidWord] = useState("");
   const [customWords, setCustomWords] = useState([]);
   const [isError, setIsError] = useState(false);
-  const [dailyWords, setDailyWords] = useState([]);
 
   const handleInputChange = (e: any) => {
     console.log(e);
@@ -32,6 +31,7 @@ export default function Home() {
   };
 
   const makeCustomRequest = (word: string) => {
+    //calls request function then interprets response
     makeRequest("http://localhost:8000/guess/?word=" + word.toLowerCase())
       .then(function (response: any) {
         setCustomWords(response.data.guesses);

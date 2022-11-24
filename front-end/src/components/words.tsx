@@ -2,6 +2,7 @@ import React from "react";
 import { Flex, Text, HStack, VStack } from "@chakra-ui/react";
 
 export function GenerateWordle(props: any) {
+  //creates the wordle board
   const wordleBoard = [];
   for (let i = 0; i < 6; i++) {
     if (i < props.words.length) {
@@ -16,9 +17,10 @@ export function GenerateWordle(props: any) {
 }
 
 export function GenerateWord(props: any) {
+  //creates individual words in the board
   const word = [];
   for (let i = 0; i < 5; i++) {
-    if (props.word[i] == props.target[i].toLowerCase()) {
+    if (props.word[i] == props.target.toLowerCase()[i]) {
       word.push(
         <GenerateLetter letter={props.word[i]} color="#538d4e" key={i} />
       );
@@ -36,6 +38,7 @@ export function GenerateWord(props: any) {
 }
 
 export function GenerateLetter(props: any) {
+  //creates letters
   if (props.letter != " ") {
     return (
       <Flex w="60px" h="60px" bg={props.color} justify="center" align="center">
