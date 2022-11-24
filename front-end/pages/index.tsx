@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
   Heading,
   Flex,
@@ -17,7 +15,6 @@ import {
   Box,
   Center,
   Text,
-  Link,
   Spacer,
 } from "@chakra-ui/react";
 import { GenerateWordle } from "../src/components/words";
@@ -124,9 +121,6 @@ export default function Home() {
       <Spacer />
       <Text color="white" alignSelf="center" pb={6}>
         Nathan Huey &#169; 2022-2022 &#160; &#160;
-        <Link href="https://github.com/njhuey" target="_blank">
-          <FontAwesomeIcon icon={faGithub} size="lg" />
-        </Link>
       </Text>
     </Flex>
   );
