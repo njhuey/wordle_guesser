@@ -33,8 +33,8 @@ class GuessSingleWord(APIView):
         except:
             raise APIException('must include guesses and colors in body')
 
-        guess = wordle_single(request.data['guesses'], request.data['colors'])
-        if not guess:
+        guesses = wordle_single(request.data['guesses'], request.data['colors'])
+        if not guesses:
             raise APIException('invalid input')
 
-        return Response({"guess": guess})
+        return Response({"guesses": guesses, "count": len(guesses)})
