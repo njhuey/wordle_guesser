@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Text, HStack, VStack } from "@chakra-ui/react";
+import { Flex, Text, HStack, VStack, Textarea } from "@chakra-ui/react";
 
 export function GenerateWordle(props: any) {
   //creates the wordle board
@@ -18,13 +18,34 @@ export function GenerateWordle(props: any) {
 
 export function GenerateWord(props: any) {
   //creates individual words in the board
-  const word = [];
+  const colors = ["grey", "grey", "grey", "grey", "grey"];
+  let target_word: string = props.target.toLowerCase();
+  const guess = props.word;
+
   for (let i = 0; i < 5; i++) {
-    if (props.word[i] == props.target.toLowerCase()[i]) {
+    if (guess[i] == target_word[i]) {
+      colors[i] = "green";
+      let temp = target_word.slice(0, i);
+      temp += " ";
+      temp += target_word.slice(i + 1, target_word.length);
+      target_word = temp;
+    }
+  }
+
+  for (let i = 0; i < 5; i++) {
+    if (target_word.indexOf(guess[i]) != -1 && colors[i] != "green") {
+      colors[i] = "yellow";
+      target_word = target_word.replace(guess[i], " ");
+    }
+  }
+
+  let word = [];
+  for (let i = 0; i < 5; i++) {
+    if (colors[i] == "green") {
       word.push(
         <GenerateLetter letter={props.word[i]} color="#538d4e" key={i} />
       );
-    } else if (props.target.toLowerCase().includes(props.word[i])) {
+    } else if (colors[i] == "yellow") {
       word.push(
         <GenerateLetter letter={props.word[i]} color="#b59f3b" key={i} />
       );
@@ -34,6 +55,7 @@ export function GenerateWord(props: any) {
       );
     }
   }
+
   return <HStack>{word}</HStack>;
 }
 
