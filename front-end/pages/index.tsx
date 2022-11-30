@@ -110,10 +110,9 @@ export default function Home() {
                 removes words that are no longer possible based on the color
                 coded response returned by wordle.
               </Text>
-
               <Box h={8} />
-              <Text>Success Rate: %84.4</Text>
-              <Text>Average Number of Guesses: 4.6</Text>
+              <Text>Success Rate: 89%</Text>
+              <Text>Average Number of Guesses: 4.3</Text>
             </TabPanel>
           </TabPanels>
         </Tabs>
