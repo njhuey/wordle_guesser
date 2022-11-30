@@ -1,10 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
-from .guess import wordle
+from .guess import wordle, wordle_single
 
 
-class GuessWord(APIView):
+class GuessCustomWord(APIView):
     def get(self, request):
         """
         Returns the guess sequence for a given target word.
@@ -20,3 +20,21 @@ class GuessWord(APIView):
         data = {"guesses": guesses,
                 "status": guesses[-1] == request.query_params['word'], "count": len(guesses)}
         return Response(data)
+
+
+class GuessSingleWord(APIView):
+    def get(self, request):
+        """
+        Returns a single word based on previous guesses
+        """
+        try:
+            request.data['guesses']
+            request.data['colors']
+        except:
+            raise APIException('must include guesses and colors in body')
+
+        guess = wordle_single(request.data['guesses'], request.data['colors'])
+        if not guess:
+            raise APIException('invalid input')
+
+        return Response({"guess": guess})

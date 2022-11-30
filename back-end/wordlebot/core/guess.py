@@ -17,12 +17,30 @@ def wordle(target_word):
 
     words = word_list[:]
     guesses = [eval(words)]
-    while guesses[-1] != target_word and len(guesses) < 6:
+    while guesses[-1] != target_word and len(guesses) < 6 and words:
         response = check(target_word, guesses[-1])
         words = eleminate_words(words, guesses[-1], response)
-        guesses += [eval(words)]
+        if words:
+            guesses += [eval(words)]
 
     return guesses
+
+
+def wordle_single(words_guessed, colors):
+    """
+    function returns the best next guess based on previous guesses
+    """
+    words = word_list[:]
+
+    if len(words_guessed) != len(colors):
+        return None
+
+    for i, word in enumerate(words_guessed):
+        if word not in word_list or len(colors[i]) != 5:
+            return None
+        words = eleminate_words(words, word, colors[i])
+
+    return eval(words)
 
 
 def eval(words):
@@ -39,9 +57,13 @@ def eval(words):
 
     optimal_word = [words[0], 0]
     for word in words:
-        temp_val = 0
+        chars = {}
         for index, letter in enumerate(word):
-            temp_val += pos_frequency[index][letter]
+            if letter in chars:
+                chars[letter] = max(chars[letter], pos_frequency[index][letter])
+            else:
+                chars[letter] = pos_frequency[index][letter]
+        temp_val = sum(chars.values())
         if temp_val > optimal_word[1]:
             optimal_word = [word, temp_val]
 
@@ -52,14 +74,16 @@ def check(target_word, guess):
     """
     returns colored response by comparing guess and target word
     """
-    response = []
+    response = ["grey", "grey", "grey", "grey", "grey"]
     for index in range(5):
         if guess[index] == target_word[index]:
-            response += ["green"]
-        elif guess[index] in target_word:
-            response += ["yellow"]
-        else:
-            response += ["grey"]
+            response[index] = "green"
+            target_word = target_word[:index] + " " + target_word[index+1:]
+
+    for index in range(5):
+        if guess[index] in target_word and response[index] != "green":
+            response[index] = "yellow"
+            target_word = target_word[:target_word.find(guess[index])] + " " + target_word[target_word.find(guess[index])+1:]
 
     return response
 
@@ -68,31 +92,38 @@ def eleminate_words(words, guess, response):
     """
     eliminates words that are no longer possible
     """
+    pos_letters = {}
+    neg_letters = []
     for index, color in enumerate(response):
-        if color == "green":
-            greenLetter(words, guess, index)
-        elif color == "yellow":
-            yellowLetter(words, guess, index)
+        if color in ["green", "yellow"]:
+            if color == "green":
+                temp = [word for word in words if guess[index] != word[index]]
+            else:
+                temp = [word for word in words if guess[index] == word[index]]
+
+            for x in temp:
+                words.remove(x)
+
+            if pos_letters.get(guess[index]):
+                pos_letters[guess[index]] += 1
+            else:
+                pos_letters[guess[index]] = 1
         else:
-            blackLetter(words, guess, index)
+            neg_letters += [guess[index]]
+
+    for letter in pos_letters.keys():
+        temp = []
+        temp = [word for word in words if word.count(letter) < pos_letters[letter]]
+        for x in temp:
+            words.remove(x)
+
+    for letter in set(neg_letters):
+        temp = []
+        if letter in pos_letters:
+            temp = [word for word in words if word.count(letter) != pos_letters[letter]]
+        else:
+            temp = [word for word in words if letter in word]
+        for x in temp:
+            words.remove(x)
 
     return words
-
-
-def greenLetter(words, guess, index):
-    temp = [word for word in words if guess[index] != word[index]]
-    for x in temp:
-        words.remove(x)
-
-
-def yellowLetter(words, guess, index):
-    temp = [word for word in words if guess[index] == word[index]]
-    temp += [word for word in words if guess[index] not in word]
-    for x in temp:
-        words.remove(x)
-
-
-def blackLetter(words, guess, index):
-    temp = [word for word in words if guess[index] in word]
-    for x in temp:
-        words.remove(x)
