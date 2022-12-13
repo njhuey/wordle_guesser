@@ -17,7 +17,7 @@ import {
   Text,
   Spacer,
 } from "@chakra-ui/react";
-import { GenerateWordle } from "../src/components/words";
+import { GenerateWordle, ColorCycleWordle } from "../src/components/words";
 import { makeRequest } from "../src/api";
 
 export default function Home() {
@@ -60,13 +60,17 @@ export default function Home() {
           align="center"
           w="80%"
         >
-          <TabList>
+          <TabList mb="20px">
             <Tab w="3xs">Daily Wordle</Tab>
             <Tab w="3xs">Custom Wordle</Tab>
             <Tab w="3xs">Info</Tab>
           </TabList>
           <TabPanels>
-            <TabPanel></TabPanel>
+            <TabPanel>
+              <Center>
+                <ColorCycleWordle />
+              </Center>
+            </TabPanel>
             <TabPanel>
               <FormControl
                 isInvalid={isError}

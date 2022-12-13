@@ -40,7 +40,7 @@ def wordle_single(words_guessed, colors):
             return None
         words = eleminate_words(words, word, colors[i])
 
-    return words_guessed + [eval(words)]
+    return eval(words)
 
 
 def eval(words):
