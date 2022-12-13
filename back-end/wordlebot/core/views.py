@@ -23,18 +23,19 @@ class GuessCustomWord(APIView):
 
 
 class GuessSingleWord(APIView):
-    def get(self, request):
+    def post(self, request):
         """
         Returns a single word based on previous guesses
         """
         try:
+            print(request.data)
             request.data['guesses']
             request.data['colors']
         except:
             raise APIException('must include guesses and colors in body')
 
-        guesses = wordle_single(request.data['guesses'], request.data['colors'])
-        if not guesses:
+        guess = wordle_single(request.data['guesses'], request.data['colors'])
+        if not guess:
             raise APIException('invalid input')
 
-        return Response({"guesses": guesses, "count": len(guesses)})
+        return Response({"guess": guess, "count": len(request.data['guesses']) + 1})
