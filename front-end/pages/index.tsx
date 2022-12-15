@@ -1,50 +1,23 @@
 import { useState } from "react";
 import {
-  Heading,
   Flex,
-  VStack,
+  Box,
   Tabs,
   TabList,
   TabPanel,
   TabPanels,
   Tab,
+  VStack,
+  Spacer,
   Divider,
-  FormControl,
-  Input,
-  FormErrorMessage,
-  Box,
+  Heading,
   Center,
   Text,
-  Spacer,
 } from "@chakra-ui/react";
-import { GenerateWordle, ColorCycleWordle } from "../src/components/words";
-import { makeRequest } from "../src/api";
+import { CustomWordle } from "../src/customWordle";
+import { ColorCycleWordle } from "../src/cycleWords";
 
 export default function Home() {
-  const [input, setInput] = useState("");
-  const [validWord, setValidWord] = useState("");
-  const [customWords, setCustomWords] = useState([]);
-  const [isError, setIsError] = useState(false);
-
-  const handleInputChange = (e: any) => {
-    console.log(e);
-    setInput(e.target.value);
-  };
-
-  const makeCustomRequest = (word: string) => {
-    //calls request function then interprets response
-    makeRequest("http://localhost:8000/guess/?word=" + word.toLowerCase())
-      .then(function (response: any) {
-        setCustomWords(response.data.guesses);
-        setValidWord(word);
-        setIsError(false);
-        console.log(customWords);
-      })
-      .catch(function (error: any) {
-        setIsError(true);
-      });
-  };
-
   return (
     <Flex w="100%" minH="100vh" bg="#121213" flexDir="column">
       <VStack w="100vw" h="100%">
@@ -72,32 +45,7 @@ export default function Home() {
               </Center>
             </TabPanel>
             <TabPanel>
-              <FormControl
-                isInvalid={isError}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  makeCustomRequest(input);
-                }}
-                pb={4}
-              >
-                <form>
-                  <Input
-                    type="text"
-                    value={input}
-                    onChange={handleInputChange}
-                    w="100%"
-                    maxW="sm"
-                    placeholder="Input 5 Letter Word"
-                    textTransform="lowercase"
-                  />
-                </form>
-                <Box w="100%" maxW="sm">
-                  <FormErrorMessage>invalid input</FormErrorMessage>
-                </Box>
-              </FormControl>
-              <Center>
-                <GenerateWordle words={customWords} target={validWord} />
-              </Center>
+              <CustomWordle />
             </TabPanel>
             <TabPanel>
               <Box h={12}>
