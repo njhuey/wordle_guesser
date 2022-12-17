@@ -10,6 +10,8 @@ type response = {
   };
 };
 
+type error = any;
+
 export function ColorCycleWordle() {
   //creates interactive wordle board used to solve the daily wordle
   const makeRequest = (temp_words: string[], temp_colors: number[][]) => {
@@ -29,7 +31,7 @@ export function ColorCycleWordle() {
         setCycleColors([0, 0, 0, 0, 0]);
         setIsError("white");
       })
-      .catch(function (error: any) {
+      .catch(function (error: error) {
         console.log(error);
         setMessage("impossible wordle pattern");
         setIsError("red");
