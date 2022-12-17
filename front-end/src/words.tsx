@@ -6,15 +6,15 @@ interface WordProps {
   colors: string[];
 }
 
+interface LetterProps {
+  letter: string;
+  color: string;
+}
+
 interface ColorCycleWordProps {
   word: string;
   colors: number[];
   onClick: (index: number) => void;
-}
-
-interface LetterProps {
-  letter: string;
-  color: string;
 }
 
 interface ColorCycleLetterProps {
@@ -22,24 +22,6 @@ interface ColorCycleLetterProps {
   color: string;
   index: number;
   onClick: (index: number) => void;
-}
-
-export function Letter(props: LetterProps) {
-  //creates letter
-  return (
-    <Flex
-      w="60px"
-      h="60px"
-      bg={props.color}
-      justify="center"
-      align="center"
-      userSelect="none"
-    >
-      <Text textTransform="uppercase" fontSize="4xl" as="b">
-        {props.letter}
-      </Text>
-    </Flex>
-  );
 }
 
 export function Word(props: WordProps) {
@@ -59,6 +41,24 @@ export function Word(props: WordProps) {
   }
 
   return <HStack>{word}</HStack>;
+}
+
+export function Letter(props: LetterProps) {
+  //creates letter
+  return (
+    <Flex
+      w="60px"
+      h="60px"
+      bg={props.color}
+      justify="center"
+      align="center"
+      userSelect="none"
+    >
+      <Text textTransform="uppercase" fontSize="4xl" as="b">
+        {props.letter}
+      </Text>
+    </Flex>
+  );
 }
 
 export function ColorCycleWord(props: ColorCycleWordProps) {
@@ -85,16 +85,6 @@ export function ColorCycleWord(props: ColorCycleWordProps) {
   return <HStack>{word}</HStack>;
 }
 
-export function BlankWord() {
-  //creates blank word
-  let word: JSX.Element[] = [];
-  for (let i = 0; i < 5; i++) {
-    word.push(<BlankLetter />);
-  }
-
-  return <HStack>{word}</HStack>;
-}
-
 function ColorCycleLetter(props: ColorCycleLetterProps) {
   //creates letter that cycles when clicked
   return (
@@ -115,6 +105,16 @@ function ColorCycleLetter(props: ColorCycleLetterProps) {
       </Text>
     </Flex>
   );
+}
+
+export function BlankWord() {
+  //creates blank word
+  let word: JSX.Element[] = [];
+  for (let i = 0; i < 5; i++) {
+    word.push(<BlankLetter />);
+  }
+
+  return <HStack>{word}</HStack>;
 }
 
 function BlankLetter() {
