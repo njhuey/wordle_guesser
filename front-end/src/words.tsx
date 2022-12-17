@@ -1,6 +1,11 @@
 import { Flex, Text, HStack } from "@chakra-ui/react";
 const axios = require("axios");
 
+interface WordProps {
+  word: string;
+  colors: string[];
+}
+
 interface ColorCycleWordProps {
   word: string;
   colors: number[];
@@ -89,7 +94,8 @@ export function GenerateLetter(props: any) {
   }
 }
 
-export function Word(props: any) {
+export function Word(props: WordProps) {
+  //creates color coded word depending on props
   const mapping: { [key: string]: string } = {
     green: "#538d4e",
     yellow: "#b59f3b",
@@ -99,25 +105,20 @@ export function Word(props: any) {
   let word: JSX.Element[] = [];
 
   for (let i = 0; i < 5; i++) {
-    if (props.colors[i] == 1) {
-      word.push(
-        <GenerateLetter letter={props.word[i]} color="#538d4e" key={i} />
-      );
-    } else if (props.colors[i] == 2) {
-      word.push(
-        <GenerateLetter letter={props.word[i]} color="#b59f3b" key={i} />
-      );
-    } else {
-      word.push(
-        <GenerateLetter letter={props.word[i]} color="#3a3a3d" key={i} />
-      );
-    }
+    word.push(
+      <GenerateLetter
+        letter={props.word[i]}
+        color={mapping[props.colors[i]]}
+        key={i}
+      />
+    );
   }
 
   return <HStack>{word}</HStack>;
 }
 
 export function ColorCycleWord(props: ColorCycleWordProps) {
+  //creates word that cycles colors when clicked
   const lookup: { [key: number]: string } = {
     0: "#121213",
     1: "#538d4e",
@@ -140,7 +141,18 @@ export function ColorCycleWord(props: ColorCycleWordProps) {
   return <HStack>{word}</HStack>;
 }
 
+export function BlankWord() {
+  //creates blank word
+  let word: JSX.Element[] = [];
+  for (let i = 0; i < 5; i++) {
+    word.push(<BlankLetter />);
+  }
+
+  return <HStack>{word}</HStack>;
+}
+
 function ColorCycleLetter(props: ColorCycleLetterProps) {
+  //creates letter that cycles when clicked
   return (
     <Flex
       w="60px"
@@ -158,5 +170,20 @@ function ColorCycleLetter(props: ColorCycleLetterProps) {
         {props.letter}
       </Text>
     </Flex>
+  );
+}
+
+function BlankLetter() {
+  //creates blank letter
+  return (
+    <Flex
+      w="60px"
+      h="60px"
+      bg="#121213"
+      border="2px"
+      borderColor="#3a3a3d"
+      justify="center"
+      align="center"
+    />
   );
 }

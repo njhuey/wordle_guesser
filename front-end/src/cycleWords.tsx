@@ -1,9 +1,17 @@
 import { useState } from "react";
-import { Text, HStack, VStack, Button } from "@chakra-ui/react";
-import { GenerateWord, ColorCycleWord, Word } from "./words";
+import { Text, HStack, VStack, Button, Box } from "@chakra-ui/react";
+import { Word, ColorCycleWord, BlankWord } from "./words";
 const axios = require("axios");
 
+type response = {
+  data: {
+    guess: string;
+    count: number;
+  };
+};
+
 export function ColorCycleWordle() {
+  //creates interactive wordle board used to solve the daily wordle
   const makeRequest = (temp_words: string[], temp_colors: number[][]) => {
     axios({
       method: "post",
@@ -13,33 +21,23 @@ export function ColorCycleWordle() {
         colors: convertColors(temp_colors),
       },
     })
-      .then(function (response: any) {
-        // handle success
-        console.log(response);
+      .then(function (response: response) {
         setMessage("");
         setWords(temp_words);
         setColors(temp_colors);
         setCycleWord(response.data.guess);
         setCycleColors([0, 0, 0, 0, 0]);
-        setIsError(0);
+        setIsError("white");
       })
       .catch(function (error: any) {
-        // handle error
         console.log(error);
-        setMessage(
-          "impossible wordle pattern, check discrepancies with wordle site"
-        );
-        setIsError(1);
+        setMessage("impossible wordle pattern");
+        setIsError("red");
       });
   };
 
   const convertColors = (colors: number[][]): string[][] => {
-    const mapping: { [key: number]: string } = {
-      1: "green",
-      2: "yellow",
-      3: "grey",
-    };
-
+    //converts colors from numerical value to english
     let newColors: string[][] = [];
     for (let i = 0; i < colors.length; i++) {
       let wordColor: string[] = [];
@@ -57,20 +55,23 @@ export function ColorCycleWordle() {
   const [cycleColors, setCycleColors] = useState<number[]>([0, 0, 0, 0, 0]);
   const [message, setMessage] = useState<string>("");
   const [completed, setCompleted] = useState<boolean>(false);
-  const [isError, setIsError] = useState<number>(0);
+  const [isError, setIsError] = useState<string>("white");
 
-  const errorMapping: { [key: number]: string } = {
-    0: "white",
-    1: "red",
+  const mapping: { [key: number]: string } = {
+    1: "green",
+    2: "yellow",
+    3: "grey",
   };
 
   const changeColor = (i: number) => {
+    //cycles colors when clicked
     let tempColors = cycleColors.slice();
     tempColors[i] = (tempColors[i] % 3) + 1;
     setCycleColors(tempColors);
   };
 
   const onSubmit = () => {
+    //validates input then progresses next step
     if (cycleColors.every((val) => val == 1)) {
       if (!completed) {
         let temp_colors: number[][] = colors.slice();
@@ -80,7 +81,7 @@ export function ColorCycleWordle() {
         setWords(temp_words);
         setColors(temp_colors);
         setCompleted(true);
-        setIsError(0);
+        setIsError("white");
         setMessage("Success!");
       }
     } else if (!cycleColors.includes(0)) {
@@ -91,23 +92,26 @@ export function ColorCycleWordle() {
       makeRequest(temp_words, temp_colors);
     } else {
       setMessage("each letter must have a specified color");
-      setIsError(1);
+      setIsError("red");
     }
   };
 
   const onReset = () => {
+    //resets the board
     setWords([]);
     setColors([]);
     setCycleWord("cares");
     setCycleColors([0, 0, 0, 0, 0]);
     setMessage("");
     setCompleted(false);
-    setIsError(0);
+    setIsError("white");
   };
 
-  let coloredWords = [];
+  let coloredWords: JSX.Element[] = [];
   for (let i = 0; i < colors.length; i++) {
-    coloredWords.push(<Word word={words[i]} colors={colors[i]} />);
+    coloredWords.push(
+      <Word word={words[i]} colors={colors[i].map((color) => mapping[color])} />
+    );
   }
 
   if (coloredWords.length < 6 && !completed) {
@@ -121,12 +125,14 @@ export function ColorCycleWordle() {
   }
 
   for (let i = coloredWords.length; i < 6; i++) {
-    coloredWords.push(<GenerateWord word={"     "} target={"fffff"} />);
+    coloredWords.push(<BlankWord />);
   }
 
   return (
     <VStack>
-      <Text textColor={errorMapping[isError]}>{message}</Text>
+      <Box h="20px">
+        <Text textColor={isError}>{message}</Text>
+      </Box>
       {coloredWords}
       <HStack pt="10px">
         <Button colorScheme="blue" w="162px" onClick={onSubmit}>
