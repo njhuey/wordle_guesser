@@ -7,23 +7,30 @@ import {
   Center,
   Input,
 } from "@chakra-ui/react";
-import { GenerateWord } from "./words";
+import { Word, BlankWord } from "./words";
 const axios = require("axios");
 
-export function CustomWordle() {
-  //creates the wordle board
-  const [input, setInput] = useState("");
-  const [validWord, setValidWord] = useState("");
-  const [customWords, setCustomWords] = useState([]);
-  const [isError, setIsError] = useState(false);
+type input = {
+  target: {
+    value: string;
+  };
+};
 
-  const handleInputChange = (e: any) => {
-    console.log(e);
+type error = any;
+
+export function CustomWordle() {
+  //creates custom wordle board
+  const [input, setInput] = useState<string>("");
+  const [validWord, setValidWord] = useState<string>("");
+  const [customWords, setCustomWords] = useState<string[]>([]);
+  const [isError, setIsError] = useState<boolean>(false);
+
+  const handleInputChange = (e: input) => {
+    //handles forum change
     setInput(e.target.value);
   };
 
   const makeCustomRequest = (word: string) => {
-    //makes request to api
     axios("http://localhost:8000/guess/?word=" + word.toLowerCase())
       .then(function (response: any) {
         setCustomWords(response.data.guesses);
@@ -31,21 +38,50 @@ export function CustomWordle() {
         setIsError(false);
         console.log(customWords);
       })
-      .catch(function (error: any) {
+      .catch(function (error: error) {
         setIsError(true);
       });
   };
 
-  const wordleBoard = [];
-  for (let i = 0; i < 6; i++) {
-    if (i < customWords.length) {
-      wordleBoard.push(
-        <GenerateWord word={customWords[i]} target={validWord} key={i} />
-      );
-    } else {
-      wordleBoard.push(<GenerateWord word={"     "} target={validWord} />);
+  const generateColors = (guess: string, target: string): string[] => {
+    //generates color pattern depending on the guess and target words
+    const colors: string[] = ["grey", "grey", "grey", "grey", "grey"];
+    target = target.toLowerCase();
+
+    for (let i = 0; i < 5; i++) {
+      if (guess[i] == target[i]) {
+        colors[i] = "green";
+        let temp = target.slice(0, i);
+        temp += " ";
+        temp += target.slice(i + 1, target.length);
+        target = temp;
+      }
     }
+
+    for (let i = 0; i < 5; i++) {
+      if (target.indexOf(guess[i]) != -1 && colors[i] != "green") {
+        colors[i] = "yellow";
+        target = target.replace(guess[i], " ");
+      }
+    }
+
+    return colors;
+  };
+
+  const wordleBoard: JSX.Element[] = [];
+  for (let i = 0; i < customWords.length; i++) {
+    wordleBoard.push(
+      <Word
+        word={customWords[i]}
+        colors={generateColors(customWords[i], validWord)}
+      />
+    );
   }
+
+  for (let i = customWords.length; i < 6; i++) {
+    wordleBoard.push(<BlankWord />);
+  }
+
   return (
     <>
       <FormControl
