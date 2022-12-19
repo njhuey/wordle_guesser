@@ -1,6 +1,6 @@
 import ast
 
-with open('core/wordleWords.txt') as f:
+with open('wordlebot/core/wordleWords.txt') as f:
     """
     loads words into array
     """

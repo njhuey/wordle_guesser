@@ -28,7 +28,6 @@ class GuessSingleWord(APIView):
         Returns a single word based on previous guesses
         """
         try:
-            print(request.data)
             request.data['guesses']
             request.data['colors']
         except:
