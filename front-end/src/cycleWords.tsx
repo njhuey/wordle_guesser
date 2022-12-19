@@ -112,7 +112,11 @@ export function ColorCycleWordle() {
   let coloredWords: JSX.Element[] = [];
   for (let i = 0; i < colors.length; i++) {
     coloredWords.push(
-      <Word word={words[i]} colors={colors[i].map((color) => mapping[color])} />
+      <Word
+        word={words[i]}
+        colors={colors[i].map((color) => mapping[color])}
+        key={i.toString()}
+      />
     );
   }
 
@@ -122,12 +126,13 @@ export function ColorCycleWordle() {
         word={cycleWord}
         colors={cycleColors}
         onClick={(i: number) => changeColor(i)}
+        key={coloredWords.length.toString()}
       />
     );
   }
 
   for (let i = coloredWords.length; i < 6; i++) {
-    coloredWords.push(<BlankWord />);
+    coloredWords.push(<BlankWord key={i.toString()} />);
   }
 
   return (
