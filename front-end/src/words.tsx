@@ -78,6 +78,7 @@ export function ColorCycleWord(props: ColorCycleWordProps) {
         index={i}
         color={lookup[props.colors[i]]}
         onClick={(i: number) => props.onClick(i)}
+        key={i.toString()}
       />
     );
   }
@@ -96,7 +97,6 @@ function ColorCycleLetter(props: ColorCycleLetterProps) {
       align="center"
       border={props.color == "#121213" ? "2px" : "0px"}
       borderColor="#3a3a3d"
-      key={0}
       userSelect="none"
       onClick={() => props.onClick(props.index)}
     >
@@ -111,7 +111,7 @@ export function BlankWord() {
   //creates blank word
   let word: JSX.Element[] = [];
   for (let i = 0; i < 5; i++) {
-    word.push(<BlankLetter />);
+    word.push(<BlankLetter key={i.toString()} />);
   }
 
   return <HStack>{word}</HStack>;

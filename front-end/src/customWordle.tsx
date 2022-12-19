@@ -74,12 +74,13 @@ export function CustomWordle() {
       <Word
         word={customWords[i]}
         colors={generateColors(customWords[i], validWord)}
+        key={i.toString()}
       />
     );
   }
 
   for (let i = customWords.length; i < 6; i++) {
-    wordleBoard.push(<BlankWord />);
+    wordleBoard.push(<BlankWord key={i.toString()} />);
   }
 
   return (
