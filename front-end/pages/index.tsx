@@ -12,6 +12,11 @@ import {
   Heading,
   Center,
   Text,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from "@chakra-ui/react";
 import { CustomWordle } from "../src/customWordle";
 import { ColorCycleWordle } from "../src/cycleWords";
@@ -47,23 +52,65 @@ export default function Home() {
               <CustomWordle />
             </TabPanel>
             <TabPanel>
-              <Box h={12}>
-                <Text fontSize="2xl" as="b" mt="lg">
-                  General Info
-                </Text>
-              </Box>
-              <Text maxW="4xl">
-                WordleBot uses positional frequency to evaluate the best guess
-                for the game Wordle. The process starts with first determining
-                the positional letter frequency for all possible words. Then, it
-                picks the word with the highest combined value for the
-                positional frequency value for each letter. Lastly, the script
-                removes words that are no longer possible based on the color
-                coded response returned by wordle.
-              </Text>
-              <Box h={8} />
-              <Text>Success Rate: 89%</Text>
-              <Text>Average Number of Guesses: 4.3</Text>
+              <Accordion>
+                <AccordionItem>
+                  <h2>
+                    <AccordionButton>
+                      <Box as="span" flex="1" textAlign="center">
+                        <Text as="b">Daily Wordle</Text>
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                  </h2>
+                  <AccordionPanel pb={4}>
+                    For the Daily Wordle section, WordleBot will give you a
+                    prelimanary guess ("cares" is the first guess). Input this
+                    guess into the offical wordle site. Report the color pattern
+                    back to WordleBot by clicking the letters of the current
+                    guess and then press submit. Then, WordleBot will give you
+                    the next guess and you can continue the process until the
+                    daily wordle is solved.
+                  </AccordionPanel>
+                </AccordionItem>
+
+                <AccordionItem>
+                  <h2>
+                    <AccordionButton>
+                      <Box as="span" flex="1" textAlign="center">
+                        <Text as="b">Custom Wordle</Text>
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                  </h2>
+                  <AccordionPanel pb={4}>
+                    For the Custom Wordle Section, input any valid 5 letter word
+                    in the space provided then press enter. Then, WordleBot will
+                    display the guesses needed to solve your custom wordle.
+                  </AccordionPanel>
+                </AccordionItem>
+                <AccordionItem>
+                  <h2>
+                    <AccordionButton>
+                      <Box as="span" flex="1" textAlign="center">
+                        <Text as="b">General Info</Text>
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                  </h2>
+                  <AccordionPanel pb={4}>
+                    WordleBot uses positional frequency to evaluate the best
+                    guess for the game wordle. The process starts with first
+                    determining the positional letter frequency for all possible
+                    words. Then, it picks the word with the highest combined
+                    value for the positional frequency value for each letter.
+                    Lastly, the script removes words that are no longer possible
+                    based on the color coded response returned by wordle.
+                    <Box h={8} />
+                    <Text>Success Rate: 89%</Text>
+                    <Text>Average Number of Guesses: 4.3</Text>
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
             </TabPanel>
           </TabPanels>
         </Tabs>
@@ -75,3 +122,39 @@ export default function Home() {
     </Flex>
   );
 }
+
+// <Box h={12}>
+//                 <Text fontSize="2xl" as="b" mt="lg">
+//                   WordleBot Instructions
+//                 </Text>
+//               </Box>
+//               <Text maxW="4xl">
+// For the Daily Wordle section, WordleBot will give you a
+// prelimanary guess ("cares" is the first guess). Input this guess
+// into the offical wordle site. Report the color pattern back to
+// WordleBot by clicking the letters of the current guess and then
+// press submit. Then, WordleBot will give you the next guess and
+// you can continue the process until the daily wordle is solved.
+//               </Text>
+//               <Text maxW="4xl">
+// For the Custom Wordle Section, input any valid 5 letter word in
+// the space provided then press enter. Then, WordleBot will
+// display the guesses needed to solve your custom wordle.
+//               </Text>
+//               <Box h={12}>
+//                 <Text fontSize="2xl" as="b" mt="lg">
+//                   General Info
+//                 </Text>
+//               </Box>
+//               <Text maxW="4xl">
+// WordleBot uses positional frequency to evaluate the best guess
+// for the game wordle. The process starts with first determining
+// the positional letter frequency for all possible words. Then, it
+// picks the word with the highest combined value for the
+// positional frequency value for each letter. Lastly, the script
+// removes words that are no longer possible based on the color
+// coded response returned by wordle.
+//               </Text>
+//               <Box h={8} />
+//               <Text>Success Rate: 89%</Text>
+//               <Text>Average Number of Guesses: 4.3</Text>
