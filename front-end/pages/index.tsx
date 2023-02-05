@@ -64,12 +64,12 @@ export default function Home() {
                   </h2>
                   <AccordionPanel pb={4}>
                     For the Daily Wordle section, WordleBot will give you a
-                    prelimanary guess ("cares" is the first guess). Input this
-                    guess into the offical wordle site. Report the color pattern
-                    back to WordleBot by clicking the letters of the current
-                    guess and then press submit. Then, WordleBot will give you
-                    the next guess and you can continue the process until the
-                    daily wordle is solved.
+                    prelimanary guess (&#34;cares&#34; is the first guess).
+                    Input this guess into the offical wordle site. Report the
+                    color pattern back to WordleBot by clicking the letters of
+                    the current guess and then press submit. Then, WordleBot
+                    will give you the next guess and you can continue the
+                    process until the daily wordle is solved.
                   </AccordionPanel>
                 </AccordionItem>
 

@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-}
+  env: {
+    DJANGO_URL: process.env.DJANGO_URL,
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
