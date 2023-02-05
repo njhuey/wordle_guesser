@@ -16,7 +16,7 @@ ALLOWED_HOSTS = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'https://squid-app-qs5r7.ondigitalocean.app',
-    'http://nhuey.com',
+    'http://wordlebot.nhuey.com',
 ]
 
 # Application definition
