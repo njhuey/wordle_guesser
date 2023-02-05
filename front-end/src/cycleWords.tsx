@@ -17,7 +17,7 @@ export function ColorCycleWordle() {
   const makeRequest = (temp_words: string[], temp_colors: number[][]) => {
     axios({
       method: "post",
-      url: "http://localhost:8000/word/",
+      url: `${process.env.DJANGO_URL}/word`,
       data: {
         guesses: temp_words,
         colors: convertColors(temp_colors),
@@ -74,7 +74,7 @@ export function ColorCycleWordle() {
 
   const onSubmit = () => {
     //validates input then progresses next step
-    if (cycleColors.every((val) => val == 1)) {
+    if (cycleColors.every((val) => val === 1)) {
       if (!completed) {
         let temp_colors: number[][] = colors.slice();
         let temp_words: string[] = words.slice();

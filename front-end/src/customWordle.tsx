@@ -31,12 +31,11 @@ export function CustomWordle() {
   };
 
   const makeCustomRequest = (word: string) => {
-    axios("http://localhost:8000/guess/?word=" + word.toLowerCase())
+    axios(`${process.env.DJANGO_URL}/guess?word=` + word.toLowerCase())
       .then(function (response: any) {
         setCustomWords(response.data.guesses);
         setValidWord(word);
         setIsError(false);
-        console.log(customWords);
       })
       .catch(function (error: error) {
         setIsError(true);
@@ -49,17 +48,14 @@ export function CustomWordle() {
     target = target.toLowerCase();
 
     for (let i = 0; i < 5; i++) {
-      if (guess[i] == target[i]) {
+      if (guess[i] === target[i]) {
         colors[i] = "green";
-        let temp = target.slice(0, i);
-        temp += " ";
-        temp += target.slice(i + 1, target.length);
-        target = temp;
+        target = target.replace(guess[i], " ");
       }
     }
 
     for (let i = 0; i < 5; i++) {
-      if (target.indexOf(guess[i]) != -1 && colors[i] != "green") {
+      if (target.indexOf(guess[i]) !== -1 && colors[i] !== "green") {
         colors[i] = "yellow";
         target = target.replace(guess[i], " ");
       }
