@@ -10,13 +10,11 @@ DEBUG = int(os.getenv('DEBUG', 0)) == 1
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'squid-app-qs5r7.ondigitalocean.app',
     'wordlebot.nhuey.com'
 ]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'https://squid-app-qs5r7.ondigitalocean.app',
     'http://wordlebot.nhuey.com',
 ]
 
