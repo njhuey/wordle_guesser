@@ -10,10 +10,12 @@ DEBUG = int(os.getenv('DEBUG', 0)) == 1
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
+    'wordlebot-api.nhuey.com'
 ]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'https://wordlebot.nhuey.com',
 ]
 
 # Application definition
