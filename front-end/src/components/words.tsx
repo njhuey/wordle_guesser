@@ -1,5 +1,4 @@
 import { Flex, Text, HStack } from "@chakra-ui/react";
-const axios = require("axios");
 
 interface WordProps {
   word: string;
@@ -87,7 +86,7 @@ export function ColorCycleWord(props: ColorCycleWordProps) {
 }
 
 function ColorCycleLetter(props: ColorCycleLetterProps) {
-  //creates letter that cycles when clicked
+  //creates letter that cycles color when clicked
   return (
     <Flex
       w="60px"

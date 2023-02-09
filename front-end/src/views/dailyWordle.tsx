@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Text, HStack, VStack, Button, Box } from "@chakra-ui/react";
-import { Word, ColorCycleWord, BlankWord } from "./words";
-const axios = require("axios");
+import axios, { AxiosError } from "axios";
+
+import { Word, ColorCycleWord, BlankWord } from "../components/words";
 
 type response = {
   data: {
@@ -10,9 +11,7 @@ type response = {
   };
 };
 
-type error = any;
-
-export function ColorCycleWordle() {
+function DailyWordle() {
   //creates interactive wordle board used to solve the daily wordle
   const makeRequest = (temp_words: string[], temp_colors: number[][]) => {
     axios({
@@ -31,8 +30,8 @@ export function ColorCycleWordle() {
         setCycleColors([0, 0, 0, 0, 0]);
         setIsError("white");
       })
-      .catch(function (error: error) {
-        console.log(error);
+      .catch(function (e: AxiosError) {
+        console.log(e);
         setMessage("impossible wordle pattern");
         setIsError("red");
       });
@@ -67,7 +66,7 @@ export function ColorCycleWordle() {
 
   const changeColor = (i: number) => {
     //cycles colors when clicked
-    let tempColors = cycleColors.slice();
+    let tempColors: number[] = cycleColors.slice();
     tempColors[i] = (tempColors[i] % 3) + 1;
     setCycleColors(tempColors);
   };
@@ -152,3 +151,5 @@ export function ColorCycleWordle() {
     </VStack>
   );
 }
+
+export default DailyWordle;

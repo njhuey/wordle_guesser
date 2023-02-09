@@ -7,8 +7,9 @@ import {
   Center,
   Input,
 } from "@chakra-ui/react";
-import { Word, BlankWord } from "./words";
-const axios = require("axios");
+import axios, { AxiosError } from "axios";
+
+import { Word, BlankWord } from "../components/words";
 
 type input = {
   target: {
@@ -16,9 +17,7 @@ type input = {
   };
 };
 
-type error = any;
-
-export function CustomWordle() {
+function CustomWordle() {
   //creates custom wordle board
   const [input, setInput] = useState<string>("");
   const [validWord, setValidWord] = useState<string>("");
@@ -26,7 +25,7 @@ export function CustomWordle() {
   const [isError, setIsError] = useState<boolean>(false);
 
   const handleInputChange = (e: input) => {
-    //handles forum change
+    //handles form change
     setInput(e.target.value);
   };
 
@@ -37,7 +36,7 @@ export function CustomWordle() {
         setValidWord(word);
         setIsError(false);
       })
-      .catch(function (error: error) {
+      .catch(function (e: AxiosError) {
         setIsError(true);
       });
   };
@@ -110,3 +109,5 @@ export function CustomWordle() {
     </>
   );
 }
+
+export default CustomWordle;
