@@ -1,5 +1,4 @@
 import { Flex, Text, HStack } from "@chakra-ui/react";
-const axios = require("axios");
 
 interface WordProps {
   word: string;
@@ -64,10 +63,9 @@ export function Letter(props: LetterProps) {
 export function ColorCycleWord(props: ColorCycleWordProps) {
   //creates word that cycles colors when clicked
   const lookup: { [key: number]: string } = {
-    0: "#121213",
-    1: "#538d4e",
-    2: "#b59f3b",
-    3: "#3a3a3d",
+    0: "#538d4e",
+    1: "#b59f3b",
+    2: "#3a3a3d",
   };
 
   let word: JSX.Element[] = [];
@@ -87,7 +85,7 @@ export function ColorCycleWord(props: ColorCycleWordProps) {
 }
 
 function ColorCycleLetter(props: ColorCycleLetterProps) {
-  //creates letter that cycles when clicked
+  //creates letter that cycles color when clicked
   return (
     <Flex
       w="60px"
@@ -95,8 +93,7 @@ function ColorCycleLetter(props: ColorCycleLetterProps) {
       bg={props.color}
       justify="center"
       align="center"
-      border={props.color == "#121213" ? "2px" : "0px"}
-      borderColor="#3a3a3d"
+      border="0px"
       userSelect="none"
       onClick={() => props.onClick(props.index)}
     >

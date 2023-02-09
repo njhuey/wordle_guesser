@@ -1,14 +1,8 @@
 import { useState } from "react";
-import {
-  VStack,
-  FormControl,
-  FormErrorMessage,
-  Box,
-  Center,
-  Input,
-} from "@chakra-ui/react";
-import { Word, BlankWord } from "./words";
-const axios = require("axios");
+import { VStack, FormControl, Center, Input, useToast } from "@chakra-ui/react";
+import axios, { AxiosError } from "axios";
+
+import { Word, BlankWord } from "../components/words";
 
 type input = {
   target: {
@@ -16,17 +10,17 @@ type input = {
   };
 };
 
-type error = any;
-
-export function CustomWordle() {
+function CustomWordle() {
   //creates custom wordle board
+  const toast = useToast();
+
   const [input, setInput] = useState<string>("");
   const [validWord, setValidWord] = useState<string>("");
   const [customWords, setCustomWords] = useState<string[]>([]);
   const [isError, setIsError] = useState<boolean>(false);
 
   const handleInputChange = (e: input) => {
-    //handles forum change
+    //handles form change
     setInput(e.target.value);
   };
 
@@ -37,8 +31,16 @@ export function CustomWordle() {
         setValidWord(word);
         setIsError(false);
       })
-      .catch(function (error: error) {
+      .catch(function (e: AxiosError) {
         setIsError(true);
+        toast.closeAll();
+        toast({
+          title: "Invalid Word",
+          description: "please input a valid 5 letter word",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       });
   };
 
@@ -100,9 +102,6 @@ export function CustomWordle() {
             textTransform="lowercase"
           />
         </form>
-        <Box w="100%" maxW="sm">
-          <FormErrorMessage>invalid input</FormErrorMessage>
-        </Box>
       </FormControl>
       <Center>
         <VStack>{wordleBoard}</VStack>
@@ -110,3 +109,5 @@ export function CustomWordle() {
     </>
   );
 }
+
+export default CustomWordle;
