@@ -32,13 +32,17 @@ function DailyWordle() {
       })
       .catch(function (e: AxiosError) {
         console.log(e);
-        toast({
-          title: "Impossible Wordle Board Pattern",
-          description: "please check to make sure the color pattern is correct",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
+        if (!toast.isActive("dailyWordleError")) {
+          toast({
+            id: "dailyWordleError",
+            title: "Impossible Wordle Board Pattern",
+            description:
+              "please check to make sure the color pattern is correct",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       });
   };
 
