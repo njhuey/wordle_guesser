@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Text, HStack, VStack, Button, Box } from "@chakra-ui/react";
+import { HStack, VStack, Button, Box, useToast } from "@chakra-ui/react";
 import axios, { AxiosError } from "axios";
 
 import { Word, ColorCycleWord, BlankWord } from "../components/words";
@@ -13,6 +13,8 @@ type response = {
 
 function DailyWordle() {
   //creates interactive wordle board used to solve the daily wordle
+  const toast = useToast();
+
   const makeRequest = (temp_words: string[], temp_colors: number[][]) => {
     axios({
       method: "post",
@@ -23,17 +25,20 @@ function DailyWordle() {
       },
     })
       .then(function (response: response) {
-        setMessage("");
         setWords(temp_words);
         setColors(temp_colors);
         setCycleWord(response.data.guess);
         setCycleColors([0, 0, 0, 0, 0]);
-        setIsError("white");
       })
       .catch(function (e: AxiosError) {
         console.log(e);
-        setMessage("impossible wordle pattern");
-        setIsError("red");
+        toast({
+          title: "Impossible Wordle Board Pattern",
+          description: "please check to make sure the color pattern is correct",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       });
   };
 
@@ -54,9 +59,7 @@ function DailyWordle() {
   const [colors, setColors] = useState<number[][]>([]);
   const [cycleWord, setCycleWord] = useState<string>("cares");
   const [cycleColors, setCycleColors] = useState<number[]>([0, 0, 0, 0, 0]);
-  const [message, setMessage] = useState<string>("");
   const [completed, setCompleted] = useState<boolean>(false);
-  const [isError, setIsError] = useState<string>("white");
 
   const mapping: { [key: number]: string } = {
     1: "green",
@@ -82,8 +85,17 @@ function DailyWordle() {
         setWords(temp_words);
         setColors(temp_colors);
         setCompleted(true);
-        setIsError("white");
-        setMessage("Success!");
+
+        toast.closeAll();
+        toast({
+          title: "Success!",
+          description: `daily wordle solved in ${temp_words.length} ${
+            temp_words.length == 1 ? "guess" : "guesses"
+          }`,
+          status: "success",
+          duration: null,
+          isClosable: true,
+        });
       }
     } else if (!cycleColors.includes(0)) {
       let temp_colors: number[][] = colors.slice();
@@ -91,9 +103,6 @@ function DailyWordle() {
       temp_colors.push(cycleColors);
       temp_words.push(cycleWord);
       makeRequest(temp_words, temp_colors);
-    } else {
-      setMessage("each letter must have a specified color");
-      setIsError("red");
     }
   };
 
@@ -103,9 +112,8 @@ function DailyWordle() {
     setColors([]);
     setCycleWord("cares");
     setCycleColors([0, 0, 0, 0, 0]);
-    setMessage("");
     setCompleted(false);
-    setIsError("white");
+    toast.closeAll();
   };
 
   let coloredWords: JSX.Element[] = [];
@@ -136,9 +144,7 @@ function DailyWordle() {
 
   return (
     <VStack>
-      <Box h="20px">
-        <Text textColor={isError}>{message}</Text>
-      </Box>
+      <Box h="20px"></Box>
       {coloredWords}
       <HStack pt="10px">
         <Button colorScheme="blue" w="162px" onClick={onSubmit}>
