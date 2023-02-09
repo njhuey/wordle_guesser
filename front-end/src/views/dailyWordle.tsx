@@ -28,7 +28,7 @@ function DailyWordle() {
         setWords(temp_words);
         setColors(temp_colors);
         setCycleWord(response.data.guess);
-        setCycleColors([0, 0, 0, 0, 0]);
+        setCycleColors([2, 2, 2, 2, 2]);
       })
       .catch(function (e: AxiosError) {
         console.log(e);
@@ -58,25 +58,25 @@ function DailyWordle() {
   const [words, setWords] = useState<string[]>([]);
   const [colors, setColors] = useState<number[][]>([]);
   const [cycleWord, setCycleWord] = useState<string>("cares");
-  const [cycleColors, setCycleColors] = useState<number[]>([0, 0, 0, 0, 0]);
+  const [cycleColors, setCycleColors] = useState<number[]>([2, 2, 2, 2, 2]);
   const [completed, setCompleted] = useState<boolean>(false);
 
   const mapping: { [key: number]: string } = {
-    1: "green",
-    2: "yellow",
-    3: "grey",
+    0: "green",
+    1: "yellow",
+    2: "grey",
   };
 
   const changeColor = (i: number) => {
     //cycles colors when clicked
     let tempColors: number[] = cycleColors.slice();
-    tempColors[i] = (tempColors[i] % 3) + 1;
+    tempColors[i] = (tempColors[i] + 1) % 3;
     setCycleColors(tempColors);
   };
 
   const onSubmit = () => {
     //validates input then progresses next step
-    if (cycleColors.every((val) => val === 1)) {
+    if (cycleColors.every((val) => val === 0)) {
       if (!completed) {
         let temp_colors: number[][] = colors.slice();
         let temp_words: string[] = words.slice();
@@ -97,7 +97,7 @@ function DailyWordle() {
           isClosable: true,
         });
       }
-    } else if (!cycleColors.includes(0)) {
+    } else {
       let temp_colors: number[][] = colors.slice();
       let temp_words: string[] = words.slice();
       temp_colors.push(cycleColors);
@@ -111,7 +111,7 @@ function DailyWordle() {
     setWords([]);
     setColors([]);
     setCycleWord("cares");
-    setCycleColors([0, 0, 0, 0, 0]);
+    setCycleColors([2, 2, 2, 2, 2]);
     setCompleted(false);
     toast.closeAll();
   };
