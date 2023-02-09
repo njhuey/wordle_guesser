@@ -33,14 +33,16 @@ function CustomWordle() {
       })
       .catch(function (e: AxiosError) {
         setIsError(true);
-        toast.closeAll();
-        toast({
-          title: "Invalid Word",
-          description: "please input a valid 5 letter word",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
+        if (!toast.isActive("customWordleError")) {
+          toast({
+            id: "customWordleError",
+            title: "Invalid Word",
+            description: "please input a valid 5 letter word",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       });
   };
 
