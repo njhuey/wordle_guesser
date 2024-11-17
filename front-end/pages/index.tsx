@@ -22,7 +22,7 @@ export default function Home() {
       <VStack w="100vw" h="100%">
         <Flex w="100%" align="center" justify="center">
           <Text fontSize="6xl" as="b">
-            WordleBot
+            Wordle Guesser
           </Text>
         </Flex>
         <Divider />

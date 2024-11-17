@@ -17,10 +17,10 @@ function Info() {
       </Text>
       <br />
       <Box m={4} textAlign="left">
-        WordleBot is a program created by Nathan Huey to solve the daily wordle.
-        Originally created as a secret tool to gain a competitive edge against
-        friends, WordleBot has been adapted into a full-stack web app
-        (Next.js/Django).
+        Wordle Guesser is a program created by Nathan Huey to solve the daily
+        wordle. Originally created as a secret tool to gain a competitive edge
+        against friends, Wordle Guesser has been adapted into a full-stack web 
+        app (Next.js/Django).
       </Box>
       <Box m={4} textAlign="left">
         <HelpText />
