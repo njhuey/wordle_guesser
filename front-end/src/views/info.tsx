@@ -18,20 +18,21 @@ function Info() {
       <br />
       <Box m={4} textAlign="left">
         Wordle Guesser is a program created by Nathan Huey to solve the daily
-        wordle. Originally created as a secret tool to gain a competitive edge
-        against friends, Wordle Guesser has been adapted into a full-stack web 
+        Wordle. Originally created as a secret tool to gain a competitive edge
+        against friends, Wordle Guesser has been adapted into a full-stack web
         app (Next.js/Django).
       </Box>
       <Box m={4} textAlign="left">
         <HelpText />
       </Box>
       <Box m={4} textAlign="left">
-        WordleBot uses positional frequency to evaluate the best guess given
-        previously color-coded words. The process starts with first determining
-        the positional letter frequency for all possible words. Then, it picks
-        the word with the highest combined value for the positional frequency
-        value for each letter. Lastly, the script removes words that are no
-        longer possible based on the color coded response returned by wordle.
+        Wordle Guesser uses positional letter frequency to determine the best
+        guess given previously color-coded words. The process starts by
+        calculating the positional letter frequency for all possible words. Then
+        for each word, it calculates the sum of the positional letter frequency
+        for each letter and chooses the word with the highest sum. Lastly, it
+        uses the color-coded response from the Wordle site to eliminate words
+        that are no longer possible. It then repeats this process.
       </Box>
       <Box m={4} textAlign="left">
         Github:{" "}

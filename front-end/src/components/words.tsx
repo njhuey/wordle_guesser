@@ -35,7 +35,11 @@ export function Word(props: WordProps) {
 
   for (let i = 0; i < 5; i++) {
     word.push(
-      <Letter letter={props.word[i]} color={mapping[props.colors[i]]} key={i} />
+      <Letter
+        letter={props.word[i]}
+        color={mapping[props.colors[i]]}
+        key={i}
+      />,
     );
   }
 
@@ -77,7 +81,7 @@ export function ColorCycleWord(props: ColorCycleWordProps) {
         color={lookup[props.colors[i]]}
         onClick={(i: number) => props.onClick(i)}
         key={i.toString()}
-      />
+      />,
     );
   }
 

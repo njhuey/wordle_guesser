@@ -75,7 +75,7 @@ function CustomWordle() {
         word={customWords[i]}
         colors={generateColors(customWords[i], validWord)}
         key={i.toString()}
-      />
+      />,
     );
   }
 

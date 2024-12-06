@@ -127,7 +127,7 @@ function DailyWordle() {
         word={words[i]}
         colors={colors[i].map((color) => mapping[color])}
         key={i.toString()}
-      />
+      />,
     );
   }
 
@@ -138,7 +138,7 @@ function DailyWordle() {
         colors={cycleColors}
         onClick={(i: number) => changeColor(i)}
         key={coloredWords.length.toString()}
-      />
+      />,
     );
   }
 
