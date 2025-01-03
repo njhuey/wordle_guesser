@@ -173,10 +173,61 @@ func eliminateImpossibleWords(remainingWords []string, guess ColoredWord) []stri
 	return remainingWords
 }
 
-func init() {
-	allWords, wordSlices, wordLetters = loadAllWords()
+// Get the total letter frequency of all letter within words.
+func getLetterFrequency(words []string) map[rune]int {
+	letterFrequency := make(map[rune]int)
+	for _, word := range words {
+		for _, letter := range word {
+			if _, ok := letterFrequency[letter]; !ok {
+				letterFrequency[letter] = 1
+			} else {
+				letterFrequency[letter] += 1
+			}
+		}
+	}
+	return letterFrequency
 }
 
-func main() {
-	fmt.Println(allWords)
+// Get the maximum letter sums for a word given letter total frequency.
+func getMaxLetterVals(word string, letterFrequency map[rune]int) map[rune]int {
+	maxLetterVals := make(map[rune]int)
+	for _, letter := range word {
+		if _, ok := maxLetterVals[letter]; !ok {
+			maxLetterVals[letter] = letterFrequency[letter]
+		}
+	}
+	return maxLetterVals
+}
+
+// Evaluate the best word from a list of remaining words by first computing the total
+// letter frequecy for all words. Then, choose the word has the max sum of the set of
+// it's letter's corresponding frequencies.
+func letterFrequencyEval(words []string) (string, error) {
+	if len(words) == 0 {
+		return "", errors.New("Attempted to evaluate the best word using letter frequency with an empty slice of words, exiting.")
+	}
+
+	letterFrequency := getLetterFrequency(words)
+
+	wordValues := make(map[string]map[rune]int)
+	for _, word := range words {
+		wordValues[word] = getMaxLetterVals(word, letterFrequency)
+	}
+
+	bestWord, high := words[0], 0
+	for word, letterVals := range wordValues {
+		sum := 0
+		for _, val := range letterVals {
+			sum += val
+		}
+		if sum > high {
+			bestWord = word
+			high = sum
+		}
+	}
+	return bestWord, nil
+}
+
+func init() {
+	allWords, wordSlices, wordLetters = loadAllWords()
 }
