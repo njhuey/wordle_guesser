@@ -96,3 +96,63 @@ func TestEliminateWordsPartialMixed(t *testing.T) {
 		t.Errorf("Incorrect words remaining: %s", result)
 	}
 }
+
+func TestGetLetterFrequency(t *testing.T) {
+	words := []string{"hello", "great"}
+	expectedLetterFrequency := map[rune]int{
+		'l': 2,
+		'o': 1,
+		'g': 1,
+		'r': 1,
+		'a': 1,
+		't': 1,
+		'h': 1,
+		'e': 2,
+	}
+	actualLetterFrequency := getLetterFrequency(words)
+	if !maps.Equal(expectedLetterFrequency, actualLetterFrequency) {
+		t.Error("Incorrect letter frequency returned")
+	}
+}
+
+func TestGetMaxLetterValsUnique(t *testing.T) {
+	words := []string{"hello", "great", "funny", "sword"}
+	letterFrequency := getLetterFrequency(words)
+	expectedMaxLetterVals := map[rune]int{
+		'g': 1,
+		'r': 2,
+		'e': 2,
+		'a': 1,
+		't': 1,
+	}
+	actualMaxLetterVals := getMaxLetterVals("great", letterFrequency)
+	if !maps.Equal(expectedMaxLetterVals, actualMaxLetterVals) {
+		t.Error("Incorrect max letter vals returned")
+	}
+}
+
+func TestGetMaxLetterValsRepeats(t *testing.T) {
+	words := []string{"hello", "great", "funny", "sword"}
+	letterFrequency := getLetterFrequency(words)
+	expectedMaxLetterVals := map[rune]int{
+		'h': 1,
+		'e': 2,
+		'l': 2,
+		'o': 2,
+	}
+	actualMaxLetterVals := getMaxLetterVals("hello", letterFrequency)
+	if !maps.Equal(expectedMaxLetterVals, actualMaxLetterVals) {
+		t.Error("Incorrect max letter vals returned")
+	}
+}
+
+func TestLetterFrequencyEval(t *testing.T) {
+	words := []string{"hello", "great", "grunt", "bests"}
+	bestWord, err := letterFrequencyEval(words)
+	if err != nil {
+		t.Errorf("An error was returned when there shouldn't have been: %s", err)
+	}
+	if bestWord != "great" {
+		t.Errorf("The incorrect word was returned from `letterFrequencyEval`: %s", bestWord)
+	}
+}
