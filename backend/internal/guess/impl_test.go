@@ -3,6 +3,7 @@ package guess
 import (
 	"maps"
 	"slices"
+	"strings"
 	"testing"
 )
 
@@ -20,6 +21,105 @@ func TestCheckHelë(t *testing.T) {
 	if err == nil {
 		t.Errorf("Word %s was incorrectly identified as valid.", string(word))
 	}
+}
+
+func colorsStringRepr(colors []PossibleColor) string {
+	result := make([]string, len(colors))
+	for _, color := range colors {
+		switch color {
+		case Grey:
+			result = append(result, "⬜")
+		case Yellow:
+			result = append(result, "🟨")
+		case Green:
+			result = append(result, "🟩")
+		}
+	}
+	return strings.Join(result, "")
+}
+
+func coloredWordChecker(
+	t *testing.T,
+	targetWord string,
+	guess string,
+	expectedColoredWord ColoredWord,
+) {
+	actualColoredWord := createColoredWord(guess, targetWord)
+
+	if expectedColoredWord.letters != actualColoredWord.letters {
+		t.Errorf(
+			"Incorrect letters created, expected: %s, actual: %s.",
+			expectedColoredWord.letters,
+			actualColoredWord.letters,
+		)
+	}
+	if !slices.Equal(expectedColoredWord.colors, actualColoredWord.colors) {
+		t.Errorf(
+			"Incorrect colored word created.\nExpected %s\nActual   %s",
+			colorsStringRepr(expectedColoredWord.colors),
+			colorsStringRepr(actualColoredWord.colors),
+		)
+	}
+}
+
+func TestCreateColoredWordNoMatch(t *testing.T) {
+	targetWord := "sword"
+	guess := "funny"
+
+	expectedColoredWord := ColoredWord{
+		letters: guess,
+		colors:  []PossibleColor{Grey, Grey, Grey, Grey, Grey},
+	}
+
+	coloredWordChecker(t, targetWord, guess, expectedColoredWord)
+}
+
+func TestCreateColoredWordYellowMatch(t *testing.T) {
+	targetWord := "great"
+	guess := "cares"
+
+	expectedColoredWord := ColoredWord{
+		letters: guess,
+		colors:  []PossibleColor{Grey, Yellow, Yellow, Yellow, Grey},
+	}
+
+	coloredWordChecker(t, targetWord, guess, expectedColoredWord)
+}
+
+func TestCreateColoredWordGreenPartialMatch(t *testing.T) {
+	targetWord := "bares"
+	guess := "cares"
+
+	expectedColoredWord := ColoredWord{
+		letters: guess,
+		colors:  []PossibleColor{Grey, Green, Green, Green, Green},
+	}
+
+	coloredWordChecker(t, targetWord, guess, expectedColoredWord)
+}
+
+func TestCreateColoredWordMixedMatch(t *testing.T) {
+	targetWord := "fairs"
+	guess := "cares"
+
+	expectedColoredWord := ColoredWord{
+		letters: guess,
+		colors:  []PossibleColor{Grey, Green, Yellow, Grey, Green},
+	}
+
+	coloredWordChecker(t, targetWord, guess, expectedColoredWord)
+}
+
+func TestCreateColoredWordGreenFullMatch(t *testing.T) {
+	targetWord := "fight"
+	guess := "fight"
+
+	expectedColoredWord := ColoredWord{
+		letters: guess,
+		colors:  []PossibleColor{Green, Green, Green, Green, Green},
+	}
+
+	coloredWordChecker(t, targetWord, guess, expectedColoredWord)
 }
 
 func TestLetterCountGreat(t *testing.T) {
@@ -53,7 +153,7 @@ func TestEliminateWordsExact(t *testing.T) {
 		colors:  []PossibleColor{Green, Green, Green, Green, Green},
 	}
 
-	result := eliminateImpossibleWords(remainingWords, guess)
+	result := EliminateImpossibleWords(remainingWords, guess)
 	if len(result) != 1 {
 		t.Errorf("Incorrect number of remaining words returned: %d. Expected: 1", len(result))
 	}
@@ -70,7 +170,7 @@ func TestEliminateWordsPartialGreen(t *testing.T) {
 		colors:  []PossibleColor{Green, Grey, Green, Green, Grey},
 	}
 
-	result := eliminateImpossibleWords(remainingWords, guess)
+	result := EliminateImpossibleWords(remainingWords, guess)
 	if len(result) != 2 {
 		t.Errorf("Incorrect number of remaining words returned: %d. Expected 2", len(result))
 	}
@@ -87,7 +187,7 @@ func TestEliminateWordsPartialMixed(t *testing.T) {
 		colors:  []PossibleColor{Yellow, Green, Green, Grey, Green},
 	}
 
-	result := eliminateImpossibleWords(remainingWords, guess)
+	result := EliminateImpossibleWords(remainingWords, guess)
 	if len(result) != 2 {
 		t.Errorf("Incorrect number of remaining words returned: %d. Expected 2", len(result))
 	}
@@ -148,7 +248,7 @@ func TestGetMaxLetterValsRepeats(t *testing.T) {
 
 func TestLetterFrequencyEval(t *testing.T) {
 	words := []string{"hello", "great", "grunt", "bests"}
-	bestWord, err := letterFrequencyEval(words)
+	bestWord, err := LetterFrequencyEval(words)
 	if err != nil {
 		t.Errorf("An error was returned when there shouldn't have been: %s", err)
 	}

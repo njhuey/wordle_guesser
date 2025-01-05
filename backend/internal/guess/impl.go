@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
+	"github.com/joho/godotenv"
 	"os"
 	"unicode"
 )
@@ -24,10 +25,10 @@ type ColoredWord struct {
 }
 
 // Ideally this should be a path stored in an env file but this is fine for now.
-const inputWordsFilename = "words.csv"
+var inputWordsFilename string
 
 // The complete list of words possible in Wordle are available at module init time.
-var allWords []string
+var AllWords []string
 var wordSlices map[string][]rune
 var wordLetters map[string]map[rune]int
 
@@ -105,9 +106,38 @@ func loadAllWords() ([]string, map[string][]rune, map[string]map[rune]int) {
 	return words, wordSlices, wordLetters
 }
 
+// Create a `ColoredWord` from a target word and a guess.
+func createColoredWord(guess string, target string) ColoredWord {
+	colors := []PossibleColor{Grey, Grey, Grey, Grey, Grey}
+
+	targetLetters := make(map[rune]int)
+	for letter, val := range wordLetters[target] {
+		targetLetters[letter] = val
+	}
+
+	for i, letter := range guess {
+		if letter == wordSlices[target][i] {
+			colors[i] = Green
+			targetLetters[letter] -= 1
+		}
+	}
+
+	for i, letter := range guess {
+		if targetLetters[letter] != 0 && colors[i] != Green {
+			colors[i] = Yellow
+			targetLetters[letter] -= 1
+		}
+	}
+
+	return ColoredWord{
+		letters: guess,
+		colors:  colors,
+	}
+}
+
 // Given a slice of remaining possible words and a previous guess colored word,
 // eliminate words that are no longer possible and return the slice.
-func eliminateImpossibleWords(remainingWords []string, guess ColoredWord) []string {
+func EliminateImpossibleWords(remainingWords []string, guess ColoredWord) []string {
 	requiredLetters := make(map[rune]int)
 	cappedLetters := make(map[rune]bool)
 
@@ -202,7 +232,7 @@ func getMaxLetterVals(word string, letterFrequency map[rune]int) map[rune]int {
 // Evaluate the best word from a list of remaining words by first computing the total
 // letter frequecy for all words. Then, choose the word has the max sum of the set of
 // it's letter's corresponding frequencies.
-func letterFrequencyEval(words []string) (string, error) {
+func LetterFrequencyEval(words []string) (string, error) {
 	if len(words) == 0 {
 		return "", errors.New("Attempted to evaluate the best word using letter frequency with an empty slice of words, exiting.")
 	}
@@ -229,5 +259,22 @@ func letterFrequencyEval(words []string) (string, error) {
 }
 
 func init() {
-	allWords, wordSlices, wordLetters = loadAllWords()
+	if _, ok := os.LookupEnv("DATA_DIRECTORY"); !ok {
+		godotenv.Load()
+	}
+
+	dataDirectory := os.Getenv("DATA_DIRECTORY")
+	if len(dataDirectory) == 0 {
+		dataDirectory = "../../data"
+		if _, err := os.Stat(dataDirectory); err != nil {
+			if os.IsNotExist(err) {
+				panic("env is improperly configured because path to input words unabled to be determined.")
+			} else {
+				panic(err)
+			}
+		}
+	}
+
+	inputWordsFilename = dataDirectory + "/words.csv"
+	AllWords, wordSlices, wordLetters = loadAllWords()
 }
