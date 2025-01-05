@@ -1,4 +1,4 @@
-package main
+package guess
 
 import (
 	"encoding/csv"
