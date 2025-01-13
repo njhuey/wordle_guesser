@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"os"
+	"strings"
 	"unicode"
 )
 
@@ -22,6 +23,21 @@ const (
 type ColoredWord struct {
 	letters string
 	colors  []PossibleColor
+}
+
+func ColorsStringRepr(colors []PossibleColor) string {
+	result := make([]string, len(colors))
+	for _, color := range colors {
+		switch color {
+		case Grey:
+			result = append(result, "⬜")
+		case Yellow:
+			result = append(result, "🟨")
+		case Green:
+			result = append(result, "🟩")
+		}
+	}
+	return strings.Join(result, "")
 }
 
 // Ideally this should be a path stored in an env file but this is fine for now.
@@ -107,7 +123,7 @@ func loadAllWords() ([]string, map[string][]rune, map[string]map[rune]int) {
 }
 
 // Create a `ColoredWord` from a target word and a guess.
-func createColoredWord(guess string, target string) ColoredWord {
+func CreateColoredWord(guess string, target string) ColoredWord {
 	colors := []PossibleColor{Grey, Grey, Grey, Grey, Grey}
 
 	targetLetters := make(map[rune]int)
@@ -228,6 +244,8 @@ func getMaxLetterVals(word string, letterFrequency map[rune]int) map[rune]int {
 	}
 	return maxLetterVals
 }
+
+type EvalFunction func(words []string) (string, error)
 
 // Evaluate the best word from a list of remaining words by first computing the total
 // letter frequecy for all words. Then, choose the word has the max sum of the set of

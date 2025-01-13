@@ -1,36 +1,72 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/njhuey/wordle_guesser/backend/internal/guess"
+	"time"
 )
 
 // Simulate Wordle using a given word and evaluation strategy.
 func simulateWordleStrategy(
 	targetWord string,
-	evalFunc func(words []string) (string, error),
-) {
+	evalFunc guess.EvalFunction,
+) ([]guess.ColoredWord, error) {
+	remainingWords := make([]string, len(guess.AllWords))
+	copy(remainingWords, guess.AllWords)
+	coloredWords := make([]guess.ColoredWord, 0, 10)
 
-	var remainingWords []string
-	for _, word := range guess.AllWords {
-		fmt.Println(word)
-
-		copy(remainingWords, guess.AllWords)
-		for i := range 6 {
-			bestGuess, err := evalFunc(remainingWords)
-			if err != nil {
-				panic(err)
-			}
-
-			if bestGuess == targetWord {
-				fmt.Printf("Found the target word %s in %d tries", targetWord, i)
-				break
-			}
+	for len(remainingWords) != 0 {
+		bestGuess, err := evalFunc(remainingWords)
+		if err != nil {
+			panic(err)
 		}
-		break
+
+		coloredWord := guess.CreateColoredWord(bestGuess, targetWord)
+		coloredWords = append(coloredWords, coloredWord)
+		if bestGuess == targetWord {
+			break
+		}
+
+		remainingWords = guess.EliminateImpossibleWords(remainingWords, coloredWord)
+	}
+	if len(remainingWords) == 0 {
+		return nil, errors.New("No words remain while simulating Wordle, therefore, there is a bug in the evaluation function.")
+	}
+	return coloredWords, nil
+}
+
+type evalStats struct {
+	successRate   float64
+	avgNumGuesses float64
+	runDuration   time.Duration
+}
+
+// Simulate Wordle for all words given a evaluation strategy to calculate statistics.
+func calculateWordleEffectiveness(evalFunc guess.EvalFunction) evalStats {
+	numSuccess := 0
+	totalNumGuesses := 0
+	start := time.Now()
+	for _, word := range guess.AllWords {
+		coloredWords, err := simulateWordleStrategy(word, evalFunc)
+		if err != nil {
+			panic(err)
+		}
+
+		if len(coloredWords) <= 6 {
+			numSuccess += 1
+		}
+		totalNumGuesses += len(coloredWords)
+	}
+
+	return evalStats{
+		successRate:   float64(numSuccess) / float64(len(guess.AllWords)),
+		avgNumGuesses: float64(totalNumGuesses) / float64(len(guess.AllWords)),
+		runDuration:   time.Since(start),
 	}
 }
 
 func main() {
-
+	stats := calculateWordleEffectiveness(guess.LetterFrequencyEval)
+	fmt.Println(stats)
 }

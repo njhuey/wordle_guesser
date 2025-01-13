@@ -3,7 +3,6 @@ package guess
 import (
 	"maps"
 	"slices"
-	"strings"
 	"testing"
 )
 
@@ -23,28 +22,13 @@ func TestCheckHelë(t *testing.T) {
 	}
 }
 
-func colorsStringRepr(colors []PossibleColor) string {
-	result := make([]string, len(colors))
-	for _, color := range colors {
-		switch color {
-		case Grey:
-			result = append(result, "⬜")
-		case Yellow:
-			result = append(result, "🟨")
-		case Green:
-			result = append(result, "🟩")
-		}
-	}
-	return strings.Join(result, "")
-}
-
 func coloredWordChecker(
 	t *testing.T,
 	targetWord string,
 	guess string,
 	expectedColoredWord ColoredWord,
 ) {
-	actualColoredWord := createColoredWord(guess, targetWord)
+	actualColoredWord := CreateColoredWord(guess, targetWord)
 
 	if expectedColoredWord.letters != actualColoredWord.letters {
 		t.Errorf(
@@ -56,8 +40,8 @@ func coloredWordChecker(
 	if !slices.Equal(expectedColoredWord.colors, actualColoredWord.colors) {
 		t.Errorf(
 			"Incorrect colored word created.\nExpected %s\nActual   %s",
-			colorsStringRepr(expectedColoredWord.colors),
-			colorsStringRepr(actualColoredWord.colors),
+			ColorsStringRepr(expectedColoredWord.colors),
+			ColorsStringRepr(actualColoredWord.colors),
 		)
 	}
 }
