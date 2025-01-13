@@ -74,7 +74,7 @@ func loadAllWords() ([]string, map[string][]rune, map[string]map[rune]int) {
 	}
 
 	reader := csv.NewReader(file)
-	reader.FieldsPerRecord = 2
+	reader.FieldsPerRecord = 1
 	content, err := reader.ReadAll()
 	if err != nil {
 		panic(err)
@@ -82,7 +82,7 @@ func loadAllWords() ([]string, map[string][]rune, map[string]map[rune]int) {
 
 	words := make([]string, len(content))
 	for i, row := range content {
-		word := row[1]
+		word := row[0]
 		err := checkWord(word)
 		if err != nil {
 			errorMessage := fmt.Sprintf(
