@@ -48,6 +48,7 @@ func calculateWordleEffectiveness(evalFunc guess.EvalFunction) evalStats {
 	totalNumGuesses := 0
 	start := time.Now()
 	for _, word := range guess.AllWords {
+		fmt.Println(word)
 		coloredWords, err := simulateWordleStrategy(word, evalFunc)
 		if err != nil {
 			panic(err)
@@ -67,6 +68,6 @@ func calculateWordleEffectiveness(evalFunc guess.EvalFunction) evalStats {
 }
 
 func main() {
-	stats := calculateWordleEffectiveness(guess.LetterFrequencyEval)
+	stats := calculateWordleEffectiveness(guess.PositionalLetterFrequencyEval)
 	fmt.Println(stats)
 }

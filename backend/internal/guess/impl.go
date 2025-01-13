@@ -248,8 +248,8 @@ func getMaxLetterVals(word string, letterFrequency map[rune]int) map[rune]int {
 type EvalFunction func(words []string) (string, error)
 
 // Evaluate the best word from a list of remaining words by first computing the total
-// letter frequecy for all words. Then, choose the word has the max sum of the set of
-// it's letter's corresponding frequencies.
+// letter frequency for all words. Then, choose the word that has the max sum of the set
+// of it's letter's corresponding frequencies.
 func LetterFrequencyEval(words []string) (string, error) {
 	if len(words) == 0 {
 		return "", errors.New("Attempted to evaluate the best word using letter frequency with an empty slice of words, exiting.")
@@ -271,6 +271,53 @@ func LetterFrequencyEval(words []string) (string, error) {
 		if sum > high {
 			bestWord = word
 			high = sum
+		}
+	}
+	return bestWord, nil
+}
+
+// Get the positional letter frequency for all letters within words.
+func getPositionalLetterFrequency(words []string) []map[rune]int {
+	positionalLetterFrequencies := make([]map[rune]int, 5)
+	for i := range 5 {
+		positionalLetterFrequencies[i] = make(map[rune]int)
+	}
+
+	for _, word := range words {
+		for i, letter := range word {
+			if _, ok := positionalLetterFrequencies[i][letter]; !ok {
+				positionalLetterFrequencies[i][letter] = 1
+			} else {
+				positionalLetterFrequencies[i][letter] += 1
+			}
+		}
+	}
+	return positionalLetterFrequencies
+}
+
+// Evaluate the best word from a list of remaining words by first computing the
+// positional letter frequency for all words. Then, choose the word that has the max sum
+// of the set of it's letter's corresponding frequencies.
+func PositionalLetterFrequencyEval(words []string) (string, error) {
+	if len(words) == 0 {
+		return "", errors.New("Attempted to evaluate the best word using letter frequency with an empty slice of words, exiting.")
+	}
+
+	positionalLetterFrequency := getPositionalLetterFrequency(words)
+	wordValues := make(map[string]int)
+	for _, word := range words {
+		sum := 0
+		for i, letter := range word {
+			sum += positionalLetterFrequency[i][letter]
+		}
+		wordValues[word] = sum
+	}
+
+	bestWord, high := words[0], 0
+	for word, val := range wordValues {
+		if val > high {
+			bestWord = word
+			high = val
 		}
 	}
 	return bestWord, nil
