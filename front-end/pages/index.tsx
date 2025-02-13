@@ -55,7 +55,7 @@ export default function Home() {
       </VStack>
       <Spacer />
       <Text color="white" alignSelf="center" pb={6}>
-        Nathan Huey &#169; 2022-2022 &#160; &#160;
+        Nathan Huey &#169; 2022-2025 &#160; &#160;
       </Text>
     </Flex>
   );
