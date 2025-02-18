@@ -37,18 +37,18 @@ func simulateWordleStrategy(
 }
 
 type evalStats struct {
+	stratName     string
 	successRate   float64
 	avgNumGuesses float64
 	runDuration   time.Duration
 }
 
 // Simulate Wordle for all words given a evaluation strategy to calculate statistics.
-func calculateWordleEffectiveness(evalFunc guess.EvalFunction) evalStats {
+func calculateWordleEffectiveness(stratName string, evalFunc guess.EvalFunction) evalStats {
 	numSuccess := 0
 	totalNumGuesses := 0
 	start := time.Now()
 	for _, word := range guess.AllWords {
-		fmt.Println(word)
 		coloredWords, err := simulateWordleStrategy(word, evalFunc)
 		if err != nil {
 			panic(err)
@@ -61,6 +61,7 @@ func calculateWordleEffectiveness(evalFunc guess.EvalFunction) evalStats {
 	}
 
 	return evalStats{
+		stratName:     stratName,
 		successRate:   float64(numSuccess) / float64(len(guess.AllWords)),
 		avgNumGuesses: float64(totalNumGuesses) / float64(len(guess.AllWords)),
 		runDuration:   time.Since(start),
@@ -68,6 +69,12 @@ func calculateWordleEffectiveness(evalFunc guess.EvalFunction) evalStats {
 }
 
 func main() {
-	stats := calculateWordleEffectiveness(guess.PositionalLetterFrequencyEval)
-	fmt.Println(stats)
+	fmt.Println("Evaluation Statistics")
+	fmt.Printf("%-30s%-30s%-30s%-30s\n", "Strategy Name", "Success Rate", "Average Num Guesses", "Run Duration")
+
+	var strats evalStats
+	for stratName, evalFunc := range guess.EvalStrategies {
+		strats = calculateWordleEffectiveness(stratName, evalFunc)
+		fmt.Printf("%-30s%-30f%-30f%-30d\n", strats.stratName, strats.successRate, strats.avgNumGuesses, strats.runDuration)
+	}
 }

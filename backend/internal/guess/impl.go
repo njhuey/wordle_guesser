@@ -323,6 +323,8 @@ func PositionalLetterFrequencyEval(words []string) (string, error) {
 	return bestWord, nil
 }
 
+var EvalStrategies map[string]EvalFunction
+
 func init() {
 	if _, ok := os.LookupEnv("DATA_DIRECTORY"); !ok {
 		godotenv.Load()
@@ -342,4 +344,8 @@ func init() {
 
 	inputWordsFilename = dataDirectory + "/words.csv"
 	AllWords, wordSlices, wordLetters = loadAllWords()
+
+	EvalStrategies = make(map[string]EvalFunction)
+	EvalStrategies["letter_frequency"] = LetterFrequencyEval
+	EvalStrategies["positional_letter_frequency"] = PositionalLetterFrequencyEval
 }
