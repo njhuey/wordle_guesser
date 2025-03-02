@@ -31,7 +31,7 @@ func simulateWordleStrategy(
 		remainingWords = guess.EliminateImpossibleWords(remainingWords, coloredWord)
 	}
 	if len(remainingWords) == 0 {
-		return nil, errors.New("No words remain while simulating Wordle, therefore, there is a bug in the evaluation function.")
+		return nil, errors.New("No words remain while simulating Wordle. therefore, there is a bug in the evaluation function.")
 	}
 	return coloredWords, nil
 }
