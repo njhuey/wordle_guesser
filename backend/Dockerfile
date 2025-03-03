@@ -10,6 +10,7 @@ RUN go mod download
 
 ENV DATA_DIRECTORY="/home/runner/wordle_guesser/data"
 
-RUN go build -v -o /usr/local/bin/stats ./cmd/stats/main.go
+RUN go build -v -o /usr/local/bin/app ./cmd/api/main.go
+EXPOSE 8080
 
-CMD ["stats"]
+CMD ["app"]

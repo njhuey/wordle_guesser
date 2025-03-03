@@ -8,7 +8,7 @@ import (
 
 func TestCheckHello(t *testing.T) {
 	word := "hello"
-	err := checkWord(word)
+	err := CheckWord(word)
 	if err != nil {
 		t.Errorf("Word %s was incorrectly identified as invalid.", string(word))
 	}
@@ -16,7 +16,7 @@ func TestCheckHello(t *testing.T) {
 
 func TestCheckHelë(t *testing.T) {
 	word := "helë"
-	err := checkWord(word)
+	err := CheckWord(word)
 	if err == nil {
 		t.Errorf("Word %s was incorrectly identified as valid.", string(word))
 	}
@@ -30,18 +30,18 @@ func coloredWordChecker(
 ) {
 	actualColoredWord := CreateColoredWord(guess, targetWord)
 
-	if expectedColoredWord.letters != actualColoredWord.letters {
+	if expectedColoredWord.Letters != actualColoredWord.Letters {
 		t.Errorf(
 			"Incorrect letters created, expected: %s, actual: %s.",
-			expectedColoredWord.letters,
-			actualColoredWord.letters,
+			expectedColoredWord.Letters,
+			actualColoredWord.Letters,
 		)
 	}
-	if !slices.Equal(expectedColoredWord.colors, actualColoredWord.colors) {
+	if !slices.Equal(expectedColoredWord.Colors, actualColoredWord.Colors) {
 		t.Errorf(
 			"Incorrect colored word created.\nExpected %s\nActual   %s",
-			ColorsStringRepr(expectedColoredWord.colors),
-			ColorsStringRepr(actualColoredWord.colors),
+			ColorsStringRepr(expectedColoredWord.Colors),
+			ColorsStringRepr(actualColoredWord.Colors),
 		)
 	}
 }
@@ -51,8 +51,8 @@ func TestCreateColoredWordNoMatch(t *testing.T) {
 	guess := "funny"
 
 	expectedColoredWord := ColoredWord{
-		letters: guess,
-		colors:  []PossibleColor{Grey, Grey, Grey, Grey, Grey},
+		Letters: guess,
+		Colors:  []PossibleColor{Grey, Grey, Grey, Grey, Grey},
 	}
 
 	coloredWordChecker(t, targetWord, guess, expectedColoredWord)
@@ -63,8 +63,8 @@ func TestCreateColoredWordYellowMatch(t *testing.T) {
 	guess := "cares"
 
 	expectedColoredWord := ColoredWord{
-		letters: guess,
-		colors:  []PossibleColor{Grey, Yellow, Yellow, Yellow, Grey},
+		Letters: guess,
+		Colors:  []PossibleColor{Grey, Yellow, Yellow, Yellow, Grey},
 	}
 
 	coloredWordChecker(t, targetWord, guess, expectedColoredWord)
@@ -75,8 +75,8 @@ func TestCreateColoredWordGreenPartialMatch(t *testing.T) {
 	guess := "cares"
 
 	expectedColoredWord := ColoredWord{
-		letters: guess,
-		colors:  []PossibleColor{Grey, Green, Green, Green, Green},
+		Letters: guess,
+		Colors:  []PossibleColor{Grey, Green, Green, Green, Green},
 	}
 
 	coloredWordChecker(t, targetWord, guess, expectedColoredWord)
@@ -87,8 +87,8 @@ func TestCreateColoredWordMixedMatch(t *testing.T) {
 	guess := "cares"
 
 	expectedColoredWord := ColoredWord{
-		letters: guess,
-		colors:  []PossibleColor{Grey, Green, Yellow, Grey, Green},
+		Letters: guess,
+		Colors:  []PossibleColor{Grey, Green, Yellow, Grey, Green},
 	}
 
 	coloredWordChecker(t, targetWord, guess, expectedColoredWord)
@@ -99,42 +99,42 @@ func TestCreateColoredWordGreenFullMatch(t *testing.T) {
 	guess := "fight"
 
 	expectedColoredWord := ColoredWord{
-		letters: guess,
-		colors:  []PossibleColor{Green, Green, Green, Green, Green},
+		Letters: guess,
+		Colors:  []PossibleColor{Green, Green, Green, Green, Green},
 	}
 
 	coloredWordChecker(t, targetWord, guess, expectedColoredWord)
 }
 
-func TestLetterCountGreat(t *testing.T) {
+func TestLettersCountGreat(t *testing.T) {
 	word := "great"
 	letterCount := getLetterCount(word)
 	if !maps.Equal(letterCount, map[rune]int{'g': 1, 'r': 1, 'e': 1, 'a': 1, 't': 1}) {
-		t.Errorf("Letter count is incorrect for word: %s", string(word))
+		t.Errorf("Letters count is incorrect for word: %s", string(word))
 	}
 }
 
-func TestLetterCountHello(t *testing.T) {
+func TestLettersCountHello(t *testing.T) {
 	word := "hello"
 	letterCount := getLetterCount(word)
 	if !maps.Equal(letterCount, map[rune]int{'h': 1, 'e': 1, 'l': 2, 'o': 1}) {
-		t.Errorf("Letter count is incorrect for word: %s", string(word))
+		t.Errorf("Letters count is incorrect for word: %s", string(word))
 	}
 }
 
-func TestLetterCountTests(t *testing.T) {
+func TestLettersCountTests(t *testing.T) {
 	word := "tests"
 	letterCount := getLetterCount(word)
 	if !maps.Equal(letterCount, map[rune]int{'t': 2, 'e': 1, 's': 2}) {
-		t.Errorf("Letter count is incorrect for word: %s", string(word))
+		t.Errorf("Letters count is incorrect for word: %s", string(word))
 	}
 }
 
 func TestEliminateWordsExact(t *testing.T) {
 	remainingWords := []string{"hello", "great", "sword"}
 	guess := ColoredWord{
-		letters: "great",
-		colors:  []PossibleColor{Green, Green, Green, Green, Green},
+		Letters: "great",
+		Colors:  []PossibleColor{Green, Green, Green, Green, Green},
 	}
 
 	result := EliminateImpossibleWords(remainingWords, guess)
@@ -150,8 +150,8 @@ func TestEliminateWordsExact(t *testing.T) {
 func TestEliminateWordsPartialGreen(t *testing.T) {
 	remainingWords := []string{"cares", "sport", "sworn", "sword"}
 	guess := ColoredWord{
-		letters: "sport",
-		colors:  []PossibleColor{Green, Grey, Green, Green, Grey},
+		Letters: "sport",
+		Colors:  []PossibleColor{Green, Grey, Green, Green, Grey},
 	}
 
 	result := EliminateImpossibleWords(remainingWords, guess)
@@ -167,8 +167,8 @@ func TestEliminateWordsPartialGreen(t *testing.T) {
 func TestEliminateWordsPartialMixed(t *testing.T) {
 	remainingWords := []string{"cares", "rains", "fairs", "hairs"}
 	guess := ColoredWord{
-		letters: "rains",
-		colors:  []PossibleColor{Yellow, Green, Green, Grey, Green},
+		Letters: "rains",
+		Colors:  []PossibleColor{Yellow, Green, Green, Grey, Green},
 	}
 
 	result := EliminateImpossibleWords(remainingWords, guess)

@@ -21,8 +21,8 @@ const (
 
 // A possible Wordle word with colored letter combinations.
 type ColoredWord struct {
-	letters string
-	colors  []PossibleColor
+	Letters string
+	Colors  []PossibleColor
 }
 
 func ColorsStringRepr(colors []PossibleColor) string {
@@ -49,7 +49,7 @@ var wordSlices map[string][]rune
 var wordLetters map[string]map[rune]int
 
 // Check if a string is a valid Wordle word.
-func checkWord(word string) error {
+func CheckWord(word string) error {
 	for _, c := range word {
 		if !unicode.IsLetter(c) {
 			return errors.New(
@@ -99,7 +99,7 @@ func loadAllWords() ([]string, map[string][]rune, map[string]map[rune]int) {
 	words := make([]string, len(content))
 	for i, row := range content {
 		word := row[0]
-		err := checkWord(word)
+		err := CheckWord(word)
 		if err != nil {
 			errorMessage := fmt.Sprintf(
 				"Loaded word '%s' from input csv file '%s' is invalid. Provided error: %s, exiting.",
@@ -146,8 +146,8 @@ func CreateColoredWord(guess string, target string) ColoredWord {
 	}
 
 	return ColoredWord{
-		letters: guess,
-		colors:  colors,
+		Letters: guess,
+		Colors:  colors,
 	}
 }
 
@@ -159,9 +159,9 @@ func EliminateImpossibleWords(remainingWords []string, guess ColoredWord) []stri
 
 	for i := range 5 {
 		newWords := make([]string, 0, len(remainingWords))
-		currentLetter := wordSlices[guess.letters][i]
+		currentLetter := wordSlices[guess.Letters][i]
 
-		switch guess.colors[i] {
+		switch guess.Colors[i] {
 		case Grey:
 			for _, word := range remainingWords {
 				if wordSlices[word][i] != currentLetter {
@@ -324,6 +324,35 @@ func PositionalLetterFrequencyEval(words []string) (string, error) {
 }
 
 var EvalStrategies map[string]EvalFunction
+
+// Simulate Wordle using a given word and evaluation strategy.
+func SimulateWordleStrategy(
+	targetWord string,
+	evalFunc EvalFunction,
+) ([]ColoredWord, error) {
+	remainingWords := make([]string, len(AllWords))
+	copy(remainingWords, AllWords)
+	coloredWords := make([]ColoredWord, 0, 10)
+
+	for len(remainingWords) != 0 {
+		bestGuess, err := evalFunc(remainingWords)
+		if err != nil {
+			panic(err)
+		}
+
+		coloredWord := CreateColoredWord(bestGuess, targetWord)
+		coloredWords = append(coloredWords, coloredWord)
+		if bestGuess == targetWord {
+			break
+		}
+
+		remainingWords = EliminateImpossibleWords(remainingWords, coloredWord)
+	}
+	if len(remainingWords) == 0 {
+		return nil, errors.New("No words remain while simulating Wordle. therefore, there is a bug in the evaluation function.")
+	}
+	return coloredWords, nil
+}
 
 func init() {
 	if _, ok := os.LookupEnv("DATA_DIRECTORY"); !ok {

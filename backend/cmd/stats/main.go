@@ -1,40 +1,11 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"github.com/njhuey/wordle_guesser/backend/internal/guess"
 	"time"
+
+	"github.com/njhuey/wordle_guesser/backend/internal/guess"
 )
-
-// Simulate Wordle using a given word and evaluation strategy.
-func simulateWordleStrategy(
-	targetWord string,
-	evalFunc guess.EvalFunction,
-) ([]guess.ColoredWord, error) {
-	remainingWords := make([]string, len(guess.AllWords))
-	copy(remainingWords, guess.AllWords)
-	coloredWords := make([]guess.ColoredWord, 0, 10)
-
-	for len(remainingWords) != 0 {
-		bestGuess, err := evalFunc(remainingWords)
-		if err != nil {
-			panic(err)
-		}
-
-		coloredWord := guess.CreateColoredWord(bestGuess, targetWord)
-		coloredWords = append(coloredWords, coloredWord)
-		if bestGuess == targetWord {
-			break
-		}
-
-		remainingWords = guess.EliminateImpossibleWords(remainingWords, coloredWord)
-	}
-	if len(remainingWords) == 0 {
-		return nil, errors.New("No words remain while simulating Wordle. therefore, there is a bug in the evaluation function.")
-	}
-	return coloredWords, nil
-}
 
 type evalStats struct {
 	stratName     string
@@ -49,7 +20,7 @@ func calculateWordleEffectiveness(stratName string, evalFunc guess.EvalFunction)
 	totalNumGuesses := 0
 	start := time.Now()
 	for _, word := range guess.AllWords {
-		coloredWords, err := simulateWordleStrategy(word, evalFunc)
+		coloredWords, err := guess.SimulateWordleStrategy(word, evalFunc)
 		if err != nil {
 			panic(err)
 		}
