@@ -34,7 +34,8 @@ func main() {
 	allowedHosts := []string{"wordlebot.nhuey.com", "localhost:8080"}
 	router.Use(allowedHostsMiddleware(allowedHosts))
 
-	router.POST("/target_wordle", app.GuessNextWord)
+	router.POST("/next_word", app.GuessNextWord)
+	router.POST("/target_word", app.GuessTargetWord)
 
 	if err := router.Run(":8080"); err != nil {
 		panic(err)

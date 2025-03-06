@@ -1,16 +1,12 @@
 package app
 
 import (
-	"fmt"
 	"slices"
+	"strings"
 	"testing"
 
 	"github.com/njhuey/wordle_guesser/backend/internal/guess"
 )
-
-func formatColors(colors []string) string {
-	return fmt.Sprintf("%s, %s, %s, %s, %s", colors[0], colors[1], colors[2], colors[3], colors[4])
-}
 
 func TestSerializeColoredWordSingle(t *testing.T) {
 	coloredWords := []guess.ColoredWord{
@@ -27,8 +23,26 @@ func TestSerializeColoredWordSingle(t *testing.T) {
 	}
 	if !slices.Equal(serializedColoredWords[0].Colors, expectedColors) {
 		t.Errorf("Incorrect serialized colors created.\nExpected: %s\nActual: %s\n",
-			formatColors(expectedColors),
-			formatColors(serializedColoredWords[0].Colors),
+			strings.Join(expectedColors, " "),
+			strings.Join(serializedColoredWords[0].Colors, " "),
 		)
+	}
+}
+
+func TestDeserializeColoredWordSingle(t *testing.T) {
+	serializedColoredWords := []serializedColoredWord{
+		{
+			Word:   "hello",
+			Colors: []string{"green", "grey", "yellow", "grey", "green"},
+		},
+	}
+	deserializedColoredWords := deserializeColoredWords(serializedColoredWords)
+
+	expectedColors := []guess.PossibleColor{guess.Green, guess.Grey, guess.Yellow, guess.Grey, guess.Green}
+	if serializedColoredWords[0].Word != deserializedColoredWords[0].Letters {
+		t.Errorf("The word is incorrect")
+	}
+	if !slices.Equal(deserializedColoredWords[0].Colors, expectedColors) {
+		t.Errorf("Incorrect serialized colors created.")
 	}
 }

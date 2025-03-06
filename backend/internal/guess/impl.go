@@ -332,7 +332,7 @@ func SimulateWordleStrategy(
 ) ([]ColoredWord, error) {
 	remainingWords := make([]string, len(AllWords))
 	copy(remainingWords, AllWords)
-	coloredWords := make([]ColoredWord, 0, 10)
+	coloredWords := make([]ColoredWord, 0)
 
 	for len(remainingWords) != 0 {
 		bestGuess, err := evalFunc(remainingWords)
@@ -352,6 +352,25 @@ func SimulateWordleStrategy(
 		return nil, errors.New("No words remain while simulating Wordle. therefore, there is a bug in the evaluation function.")
 	}
 	return coloredWords, nil
+}
+
+// Given a list of previous guesses, evaluate the best next guess.
+func EvaluateBestNextGuess(
+	previousGuesses []ColoredWord,
+	evalFunc EvalFunction,
+) string {
+	remainingWords := make([]string, len(AllWords))
+	copy(remainingWords, AllWords)
+
+	for _, word := range previousGuesses {
+		remainingWords = EliminateImpossibleWords(remainingWords, word)
+	}
+
+	bestGuess, err := evalFunc(remainingWords)
+	if err != nil {
+		panic(err)
+	}
+	return bestGuess
 }
 
 func init() {
