@@ -10,6 +10,7 @@ import {
   Divider,
   Center,
   Text,
+  Box,
 } from "@chakra-ui/react";
 
 import DailyWordle from "../src/views/dailyWordle";
@@ -20,6 +21,22 @@ export default function Home() {
   return (
     <Flex w="100%" minH="100vh" flexDir="column">
       <VStack w="100vw" h="100%">
+        {/* Header Banner */}
+        <Box
+          bg="red.500"
+          color="white"
+          w="100%"
+          p={4}
+          textAlign="center"
+          fontSize="lg"
+          fontWeight="bold"
+          borderBottom="2px solid white"
+        >
+          Wordle Guesser is currently down as I work towards a new hosting
+          strategy. It will be back online soon!
+        </Box>
+
+        {/* Main Title */}
         <Flex w="100%" align="center" justify="center">
           <Text fontSize="6xl" as="b">
             Wordle Guesser
