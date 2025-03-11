@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   env: {
-    DJANGO_URL: process.env.DJANGO_URL,
+    API_URL: process.env.API_URL,
   },
 };
 

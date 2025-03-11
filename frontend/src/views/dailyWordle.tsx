@@ -6,7 +6,7 @@ import { Word, ColorCycleWord, BlankWord } from "../components/words";
 
 type response = {
   data: {
-    guess: string;
+    next_guess: string;
     count: number;
   };
 };
@@ -16,18 +16,23 @@ function DailyWordle() {
   const toast = useToast();
 
   const makeRequest = (temp_words: string[], temp_colors: number[][]) => {
+    let deserializedColors = convertColors(temp_colors);
+    let coloredWords = [];
+    for (let i = 0; i < temp_words.length; i++) {
+      coloredWords.push({
+        word: temp_words[i],
+        colors: deserializedColors[i],
+      });
+    }
     axios({
       method: "post",
-      url: `${process.env.DJANGO_URL}/word`,
-      data: {
-        guesses: temp_words,
-        colors: convertColors(temp_colors),
-      },
+      url: `${process.env.API_URL}/next_word`,
+      data: coloredWords,
     })
       .then(function (response: response) {
         setWords(temp_words);
         setColors(temp_colors);
-        setCycleWord(response.data.guess);
+        setCycleWord(response.data.next_guess);
         setCycleColors([2, 2, 2, 2, 2]);
       })
       .catch(function (e: AxiosError) {
@@ -61,7 +66,7 @@ function DailyWordle() {
 
   const [words, setWords] = useState<string[]>([]);
   const [colors, setColors] = useState<number[][]>([]);
-  const [cycleWord, setCycleWord] = useState<string>("cares");
+  const [cycleWord, setCycleWord] = useState<string>("sores");
   const [cycleColors, setCycleColors] = useState<number[]>([2, 2, 2, 2, 2]);
   const [completed, setCompleted] = useState<boolean>(false);
 
@@ -114,7 +119,7 @@ function DailyWordle() {
     //resets the board
     setWords([]);
     setColors([]);
-    setCycleWord("cares");
+    setCycleWord("sores");
     setCycleColors([2, 2, 2, 2, 2]);
     setCompleted(false);
     toast.closeAll();

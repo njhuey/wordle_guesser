@@ -8,7 +8,6 @@ COPY ./ .
 RUN go mod download
 
 ENV DATA_DIRECTORY="/home/runner/wordle_guesser/data"
-ENV GIN_MODE="release"
 
 RUN go build -v -o /usr/local/bin/app ./cmd/api/main.go
 EXPOSE 8080

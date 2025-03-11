@@ -10,13 +10,18 @@ type input = {
   };
 };
 
+interface coloredWord {
+  word: string;
+  colors: string[];
+}
+
 function CustomWordle() {
   //creates custom wordle board
   const toast = useToast();
 
   const [input, setInput] = useState<string>("");
   const [validWord, setValidWord] = useState<string>("");
-  const [customWords, setCustomWords] = useState<string[]>([]);
+  const [customWords, setCustomWords] = useState<coloredWord[]>([]);
   const [isError, setIsError] = useState<boolean>(false);
 
   const handleInputChange = (e: input) => {
@@ -25,7 +30,13 @@ function CustomWordle() {
   };
 
   const makeCustomRequest = (word: string) => {
-    axios(`${process.env.DJANGO_URL}/guess?word=` + word.toLowerCase())
+    axios({
+      method: "post",
+      url: `${process.env.API_URL}/target_word`,
+      data: {
+        target_word: word,
+      },
+    })
       .then(function (response: any) {
         setCustomWords(response.data.guesses);
         setValidWord(word);
@@ -46,34 +57,12 @@ function CustomWordle() {
       });
   };
 
-  const generateColors = (guess: string, target: string): string[] => {
-    //generates color pattern depending on the guess and target words
-    const colors: string[] = ["grey", "grey", "grey", "grey", "grey"];
-    target = target.toLowerCase();
-
-    for (let i = 0; i < 5; i++) {
-      if (guess[i] === target[i]) {
-        colors[i] = "green";
-        target = target.replace(guess[i], " ");
-      }
-    }
-
-    for (let i = 0; i < 5; i++) {
-      if (target.indexOf(guess[i]) !== -1 && colors[i] !== "green") {
-        colors[i] = "yellow";
-        target = target.replace(guess[i], " ");
-      }
-    }
-
-    return colors;
-  };
-
   const wordleBoard: JSX.Element[] = [];
   for (let i = 0; i < customWords.length; i++) {
     wordleBoard.push(
       <Word
-        word={customWords[i]}
-        colors={generateColors(customWords[i], validWord)}
+        word={customWords[i].word}
+        colors={customWords[i].colors}
         key={i.toString()}
       />,
     );

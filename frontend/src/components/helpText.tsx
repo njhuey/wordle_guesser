@@ -57,7 +57,7 @@ function HelpText() {
                 https://www.nytimes.com/games/wordle/index.html
               </Link>
               . Wordle Guesser will provide you with a guess which you should
-              input into the official Wordle site (&#34;cares&#34; is the first
+              input into the official Wordle site (&#34;sores&#34; is the first
               guess). The official Wordle site will then give you a color-coded
               response. Match the color combination for the current guess for
               Wordle Guesser (you can change the color by clicking the letters)
